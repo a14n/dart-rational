@@ -1,9 +1,9 @@
-name:  decimal
+name:  rational
 author: "Alexandre Ardhuin <alexandre.ardhuin@gmail.com>"
-homepage: https://github.com/a14n/dart-decimal
+homepage: https://github.com/a14n/dart-rational
 version: 0.0.4-dev
-description:  A simple package to deal with decimal numbers
-
-dependencies:
+description:  A simple package to deal with rational numbers
+dev_dependencies:
   unittest: any
+dependencies:
   meta: any

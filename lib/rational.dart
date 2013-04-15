@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library decimal;
+library rational;
 
 import 'package:meta/meta.dart';
 
 final _PATTERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
-final _0 = new Decimal.fromInt(0);
-final _1 = new Decimal.fromInt(1);
-final _5 = new Decimal.fromInt(5);
-final _10 = new Decimal.fromInt(10);
-
-Decimal dec(String value) => new Decimal(value);
+final _0 = new Rational(0);
+final _1 = new Rational(1);
+final _5 = new Rational(5);
+final _10 = new Rational(10);
 
 int _gcd(int a, int b) {
   while (b != 0) {
@@ -33,12 +31,10 @@ int _gcd(int a, int b) {
   return a;
 }
 
-class Decimal implements Comparable {
-  int _numerator, _denominator;
-
-  Decimal(String value) {
-    final match = _PATTERN.firstMatch(value);
-    if (match == null) throw new FormatException("$value is not a valid format");
+class Rational implements Comparable<Rational> {
+  static Rational parse(String decimalValue) {
+    final match = _PATTERN.firstMatch(decimalValue);
+    if (match == null) throw new FormatException("$decimalValue is not a valid format");
     final group1 = match.group(1);
     final group2 = match.group(2);
 
@@ -47,45 +43,47 @@ class Decimal implements Comparable {
       for (int i = 1; i < group2.length; i++) {
         denominator = denominator * 10;
       }
-      _init(int.parse('${group1}${group2.substring(1)}'), denominator);
+      return new Rational(int.parse('${group1}${group2.substring(1)}'), denominator);
     } else {
-      _init(int.parse(group1), 1);
+      return new Rational(int.parse(group1), 1);
     }
   }
-  Decimal.fromFraction(int numerator, int denominator) {
-    _init(numerator, denominator);
-  }
-  Decimal.fromInt(int value) {
-    _init(value, 1);
-  }
 
-  void _init(int numerator, int denominator) {
+  final int numerator, denominator;
+
+  Rational._normalized(this.numerator, this.denominator);
+
+  factory Rational(int numerator, [int denominator = 1]) {
     if (denominator == 0) throw new IntegerDivisionByZeroException();
-    if (numerator == 0) {
-      this._numerator = 0;
-      this._denominator = 1;
-    } else {
-      final gcd = _gcd(numerator.abs(), denominator.abs());
-      if (denominator < 0) {
-        this._numerator = -numerator ~/ gcd;
-        this._denominator = -denominator ~/ gcd;
-      } else {
-        this._numerator = numerator ~/ gcd;
-        this._denominator = denominator ~/ gcd;
-      }
+    if (numerator == 0) return new Rational._normalized(0, 1);
+    if (denominator < 0) {
+      numerator = -numerator;
+      denominator = -denominator;
     }
+    final aNumerator = numerator.abs();
+    final aDenominator = denominator.abs();
+    final gcd = _gcd(aNumerator, aDenominator);
+    return (gcd == 1)
+        ? new Rational._normalized(numerator, denominator)
+        : new Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
   }
 
-  bool get isInteger => _denominator == 1;
+  bool get isInteger => denominator == 1;
 
-  bool operator ==(Decimal other) => this._numerator == other._numerator && this._denominator == other._denominator;
+  int get hashCode => numerator + 31 * denominator;
 
-  String toStringAsFraction() => '${_numerator}/${_denominator}';
+  bool operator ==(Rational other) => numerator == other.numerator && denominator == other.denominator;
 
   @override String toString() {
+    if (numerator == 0) return '0';
+    if (denominator == 1) return numerator.toString();
+    else return '$numerator/$denominator';
+  }
+
+  String toDecimalString() {
     // remove factor 2 and 5 of denominator to know if String representation is finished
     // in decimal system, division by 2 or 5 leads to a finished size of decimal part
-    int denominator = _denominator;
+    int denominator = this.denominator;
     int fractionDigits = 0;
     while (denominator % 2 == 0) {
       denominator = denominator ~/ 2;
@@ -95,7 +93,7 @@ class Decimal implements Comparable {
       denominator = denominator ~/ 5;
       fractionDigits++;
     }
-    final hasLimitedLength = _numerator % denominator == 0;
+    final hasLimitedLength = numerator % denominator == 0;
     if (!hasLimitedLength) {
       fractionDigits = 10;
     }
@@ -105,27 +103,26 @@ class Decimal implements Comparable {
     }
     return asString;
   }
-
   // implementation of Comparable
 
-  @override int compareTo(Decimal other) => (this._numerator * other._denominator).compareTo(other._numerator * this._denominator);
+  @override int compareTo(Rational other) => (numerator * other.denominator).compareTo(other.numerator * denominator);
 
   // implementation of num
 
   /** Addition operator. */
-  Decimal operator +(Decimal other) => new Decimal.fromFraction(this._numerator * other._denominator + other._numerator * this._denominator, this._denominator * other._denominator);
+  Rational operator +(Rational other) => new Rational(numerator * other.denominator + other.numerator * denominator, denominator * other.denominator);
 
   /** Subtraction operator. */
-  Decimal operator -(Decimal other) => new Decimal.fromFraction(this._numerator * other._denominator - other._numerator * this._denominator, this._denominator * other._denominator);
+  Rational operator -(Rational other) => new Rational(numerator * other.denominator - other.numerator * denominator, denominator * other.denominator);
 
   /** Multiplication operator. */
-  Decimal operator *(Decimal other) => new Decimal.fromFraction(this._numerator * other._numerator, this._denominator * other._denominator);
+  Rational operator *(Rational other) => new Rational(numerator * other.numerator, denominator * other.denominator);
 
   /** Euclidean modulo operator. */
-  Decimal operator %(Decimal other) => this.remainder(other) + (isNegative ? other.abs() : _0);
+  Rational operator %(Rational other) => this.remainder(other) + (isNegative ? other.abs() : _0);
 
   /** Division operator. */
-  Decimal operator /(Decimal other) => new Decimal.fromFraction(this._numerator * other._denominator, this._denominator * other._numerator);
+  Rational operator /(Rational other) => new Rational(numerator * other.denominator, denominator * other.numerator);
 
   /**
    * Truncating division operator.
@@ -133,40 +130,40 @@ class Decimal implements Comparable {
    * The result of the truncating division [:a ~/ b:] is equivalent to
    * [:(a / b).truncate():].
    */
-  Decimal operator ~/(Decimal other) => (this / other).truncate();
+  Rational operator ~/(Rational other) => (this / other).truncate();
 
   /** Negate operator. */
-  Decimal operator -() => new Decimal.fromFraction(-_numerator, _denominator);
+  Rational operator -() => new Rational._normalized(-numerator, denominator);
 
   /** Return the remainder from dividing this [num] by [other]. */
-  Decimal remainder(Decimal other) => this - (this ~/ other) * other;
+  Rational remainder(Rational other) => this - (this ~/ other) * other;
 
   /** Relational less than operator. */
-  bool operator <(Decimal other) => this.compareTo(other) < 0;
+  bool operator <(Rational other) => this.compareTo(other) < 0;
 
   /** Relational less than or equal operator. */
-  bool operator <=(Decimal other) => this.compareTo(other) <= 0;
+  bool operator <=(Rational other) => this.compareTo(other) <= 0;
 
   /** Relational greater than operator. */
-  bool operator >(Decimal other) => this.compareTo(other) > 0;
+  bool operator >(Rational other) => this.compareTo(other) > 0;
 
   /** Relational greater than or equal operator. */
-  bool operator >=(Decimal other) => this.compareTo(other) >= 0;
+  bool operator >=(Rational other) => this.compareTo(other) >= 0;
 
   bool get isNaN => false;
 
-  bool get isNegative => _numerator < 0;
+  bool get isNegative => numerator < 0;
 
   bool get isInfinite => false;
 
   /** Returns the absolute value of this [num]. */
-  Decimal abs() => isNegative ? (-this) : this;
+  Rational abs() => isNegative ? (-this) : this;
 
   /** Returns the greatest integer value no greater than this [num]. */
-  Decimal floor() => isInteger ? this.truncate() : isNegative ? (this.truncate() - _1) : this.truncate();
+  Rational floor() => isInteger ? this.truncate() : isNegative ? (this.truncate() - _1) : this.truncate();
 
   /** Returns the least integer value that is no smaller than this [num]. */
-  Decimal ceil() => isInteger ? this.truncate() : isNegative ? this.truncate() : (this.truncate() + _1);
+  Rational ceil() => isInteger ? this.truncate() : isNegative ? this.truncate() : (this.truncate() + _1);
 
   /**
    * Returns the integer value closest to this [num].
@@ -174,33 +171,33 @@ class Decimal implements Comparable {
    * Rounds away from zero when there is no closest integer:
    *  [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
    */
-  Decimal round() {
+  Rational round() {
     final abs = this.abs();
     final absBy10 =  abs * _10;
-    Decimal dec;
+    Rational r;
     if (absBy10 % _10 < _5) {
-      dec = abs.truncate();
+      r = abs.truncate();
     } else {
-      dec = abs.truncate() + _1;
+      r = abs.truncate() + _1;
     }
-    return isNegative ? -dec : dec;
+    return isNegative ? -r : r;
   }
 
   /**
    * Returns the integer value obtained by discarding any fractional
    * digits from this [num].
    */
-  Decimal truncate() => new Decimal.fromInt(this.toInt());
+  Rational truncate() => new Rational(this.toInt());
 
   /**
    * Clamps [this] to be in the range [lowerLimit]-[upperLimit]. The comparison
    * is done using [compareTo] and therefore takes [:-0.0:] into account.
    * It also implies that [double.NaN] is treated as the maximal double value.
    */
-  Decimal clamp(Decimal lowerLimit, Decimal upperLimit) => this < lowerLimit ? lowerLimit : this > upperLimit ? upperLimit : this;
+  Rational clamp(Rational lowerLimit, Rational upperLimit) => this < lowerLimit ? lowerLimit : this > upperLimit ? upperLimit : this;
 
   /** Truncates this [num] to an integer and returns the result as an [int]. */
-  int toInt() => _numerator ~/ _denominator;
+  int toInt() => numerator ~/ denominator;
 
   /**
    * Return this [num] as a [double].
@@ -209,7 +206,7 @@ class Decimal implements Comparable {
    * approximation is returned. For numerically large integers, the
    * approximation may be infinite.
    */
-  double toDouble() => _numerator / _denominator;
+  double toDouble() => numerator / denominator;
 
 
   /**
@@ -224,10 +221,10 @@ class Decimal implements Comparable {
       for (int i = 0; i < fractionDigits; i++) {
         mul *= 10;
       }
-      final mulDec = new Decimal.fromInt(mul);
-      final tmp = (abs() + _1) * mulDec;
+      final mulRat = new Rational(mul);
+      final tmp = (abs() + _1) * mulRat;
       final tmpRound = tmp.round();
-      final intPart = ((tmpRound ~/ mulDec) - _1).toInt();
+      final intPart = ((tmpRound ~/ mulRat) - _1).toInt();
       final decimalPart = tmpRound.toInt().toString().substring(intPart.toString().length);
       return '${isNegative ? '-' : ''}${intPart}.${decimalPart}';
     }
