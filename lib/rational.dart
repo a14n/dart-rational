@@ -159,12 +159,6 @@ class Rational implements Comparable<Rational> {
   /** Returns the absolute value of this [num]. */
   Rational abs() => isNegative ? (-this) : this;
 
-  /** Returns the greatest integer value no greater than this [num]. */
-  Rational floor() => isInteger ? this.truncate() : isNegative ? (this.truncate() - _1) : this.truncate();
-
-  /** Returns the least integer value that is no smaller than this [num]. */
-  Rational ceil() => isInteger ? this.truncate() : isNegative ? this.truncate() : (this.truncate() + _1);
-
   /**
    * Returns the integer value closest to this [num].
    *
@@ -183,11 +177,49 @@ class Rational implements Comparable<Rational> {
     return isNegative ? -r : r;
   }
 
+  /** Returns the greatest integer value no greater than this [num]. */
+  Rational floor() => isInteger ? this.truncate() : isNegative ? (this.truncate() - _1) : this.truncate();
+
+  /** Returns the least integer value that is no smaller than this [num]. */
+  Rational ceil() => isInteger ? this.truncate() : isNegative ? this.truncate() : (this.truncate() + _1);
+
   /**
    * Returns the integer value obtained by discarding any fractional
    * digits from this [num].
    */
   Rational truncate() => new Rational(this.toInt());
+
+  /**
+   * Returns the integer value closest to `this`.
+   *
+   * Rounds away from zero when there is no closest integer:
+   *  [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
+   *
+   * The result is a double.
+   */
+  double roundToDouble() => round().toDouble();
+
+  /**
+   * Returns the greatest integer value no greater than `this`.
+   *
+   * The result is a double.
+   */
+  double floorToDouble() => floor().toDouble();
+
+  /**
+   * Returns the least integer value no smaller than `this`.
+   *
+   * The result is a double.
+   */
+  double ceilToDouble() => ceil().toDouble();
+
+  /**
+   * Returns the integer obtained by discarding any fractional
+   * digits from `this`.
+   *
+   * The result is a double.
+   */
+  double truncateToDouble() => truncate().toDouble();
 
   /**
    * Clamps [this] to be in the range [lowerLimit]-[upperLimit]. The comparison
@@ -207,7 +239,6 @@ class Rational implements Comparable<Rational> {
    * approximation may be infinite.
    */
   double toDouble() => numerator / denominator;
-
 
   /**
    * Converts a [num] to a string representation with [fractionDigits]
