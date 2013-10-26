@@ -14,8 +14,6 @@
 
 library rational;
 
-import 'package:meta/meta.dart';
-
 final _PATTERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
 final _0 = new Rational(0);
 final _1 = new Rational(1);
