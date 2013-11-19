@@ -1,5 +1,7 @@
+library tests;
+
 import 'package:unittest/html_config.dart';
-import 'rational_test.dart' as t;
+import 'rational_tests.dart' as t;
 
 main() {
   useHtmlConfiguration();

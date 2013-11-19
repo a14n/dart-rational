@@ -3,7 +3,6 @@ library tests;
 import 'package:unittest/unittest.dart';
 import 'package:rational/rational.dart';
 
-r(int numerator, [int denominator = 1]) => new Rational(numerator, denominator);
 p(String value) => Rational.parse(value);
 
 main() {
