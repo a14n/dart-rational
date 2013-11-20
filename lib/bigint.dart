@@ -1,8 +1,10 @@
-import 'dart:math' show max, min;
+import 'dart:math' show max, min, pow, log, LN10;
 
 final MAX_JS_INT = 9007199254740992;
 final MAX_JS_INT_AS_BIG_INT = new BigInt.fromJsInt(MAX_JS_INT);
+final _MAX_JS_INT_FOR_ADD = new BigInt.fromJsInt(MAX_JS_INT ~/ 2);
 final _BASE = 10000000;
+final _BASE_AS_BIG_INT = new BigInt.fromJsInt(10000000);
 final _LOG_BASE = 7;
 
 _normalize(List<int> a, List<int> b) {
@@ -33,11 +35,11 @@ class _EuclidianDivisionResult {
   _EuclidianDivisionResult(this.quotien, this.remainder);
 }
 
-final _0 = BigInt.parse('0');
-final _1 = BigInt.parse('1');
-final _2 = BigInt.parse('2');
-final _5 = BigInt.parse('5');
-final _10 = BigInt.parse('10');
+final _0 = new BigInt.fromJsInt(0);
+final _1 = new BigInt.fromJsInt(1);
+final _2 = new BigInt.fromJsInt(2);
+final _5 = new BigInt.fromJsInt(5);
+final _10 = new BigInt.fromJsInt(10);
 
 class BigInt {
   static BigInt parse(String text) {
@@ -69,13 +71,15 @@ class BigInt {
   }
 
   factory BigInt.fromJsInt(int intValue) {
-    final value = [];
     int a = intValue.abs();
+    final isPositive = intValue >= 0;
+    if (a < _BASE) return new BigInt([a], isPositive);
+    final value = [];
     while (a > 0) {
       value.add(a % _BASE);
       a = a ~/ _BASE;
     }
-    return new BigInt(value, intValue >= 0);
+    return new BigInt(value, isPositive);
   }
 
   bool get isNegative => !isPositive;
@@ -84,9 +88,12 @@ class BigInt {
   bool get is1 => value.length == 1 && isPositive && value[0] == 1;
   bool get is2 => value.length == 1 && isPositive && value[0] == 2;
   bool get is5 => value.length == 1 && isPositive && value[0] == 5;
+  bool get is10 => value.length == 1 && isPositive && value[0] == 10;
 
   bool get isValidJsInt => this <= MAX_JS_INT_AS_BIG_INT;
   int toValidJsInt() {
+    if (is0) return 0;
+    if (value.length == 1) return isPositive ? value[0] : -value[0];
     int intValue = 0;
     int inc = 1;
     for (int i = 0; i < value.length; i++) {
@@ -94,6 +101,14 @@ class BigInt {
       inc *= _BASE;
     }
     return isPositive ? intValue : -intValue;
+  }
+
+  double toDouble() {
+    double result = 1.0;
+    for (int i = 0; i < value.length; i++) {
+      result += value[i] * pow(_BASE, i);
+    }
+    return result;
   }
 
   BigInt operator -() => new BigInt(value, isNegative);
@@ -104,6 +119,13 @@ class BigInt {
     if (isNegative && other.isNegative) return -(-this + (-other));
 
     // 2 positive numbers
+
+    // if they are small enough add them as int
+    if (this <= _MAX_JS_INT_FOR_ADD && other <= _MAX_JS_INT_FOR_ADD) {
+      return new BigInt.fromJsInt(toValidJsInt() + other.toValidJsInt());
+    }
+
+    // else add as BigInt
     final a = value.toList();
     final b = other.value.toList();
     _normalize(a, b);
@@ -123,11 +145,17 @@ class BigInt {
     if (isPositive && other.isNegative) return this + (-other);
     if (isNegative && other.isPositive) return -(other + (-this));
     if (isNegative && other.isNegative) return -(-this - (-other));
-
     // 2 positive numbers
     if (this < other) return -(other - this);
 
     // 2 positive numbers and this >= other
+
+    // if they are small enough add them as int
+    if (this <= MAX_JS_INT_AS_BIG_INT && other <= MAX_JS_INT_AS_BIG_INT) {
+      return new BigInt.fromJsInt(toValidJsInt() - other.toValidJsInt());
+    }
+
+    // as BigInt
     final a = value.toList();
     final b = other.value.toList();
     _normalize(a, b);
@@ -148,8 +176,14 @@ class BigInt {
     if (isNegative && other.isNegative) return (-this) * (-other);
     if (this < other) return other * this;
 
-    final a = value.toList();
-    final b = other.value.toList();
+    // if they are small enough add them as int
+    if (this < _BASE_AS_BIG_INT && other < _BASE_AS_BIG_INT) {
+      return new BigInt.fromJsInt(toValidJsInt() * other.toValidJsInt());
+    }
+
+    // as BigInt
+    final a = other.value;
+    final b = value;
     BigInt result = _0;
     for (int i = 0; i < a.length; i++) {
       final  partResult = [];
@@ -170,7 +204,16 @@ class BigInt {
   }
 
   BigInt operator ~/(BigInt other) {
-    final result = this.abs()._euclidianDivision(other.abs());
+    final a = abs();
+    final b = other.abs();
+
+    // if they are small enough add them as int
+    if (a < MAX_JS_INT_AS_BIG_INT && b < MAX_JS_INT_AS_BIG_INT) {
+      return new BigInt.fromJsInt(toValidJsInt() ~/ other.toValidJsInt());
+    }
+
+    // as BigInt
+    final result = a._euclidianDivision(b);
     if (result.remainder == _0 || isPositive) {
       if (isPositive != other.isPositive) return -result.quotien;
       return result.quotien;
@@ -182,8 +225,18 @@ class BigInt {
   BigInt operator %(BigInt other) {
     if (is0) return _0;
     if (other.is2) return value.first % 2 == 0 ? _0 : _1;
-    if (other.is5 && value.length > 1) return new BigInt([value.first], isPositive) % _5;
-    final result = this.abs()._euclidianDivision(other.abs());
+    if (other.is5) return new BigInt.fromJsInt((isPositive ? value.first : -value.first) % 5);
+
+    final a = abs();
+    final b = other.abs();
+
+    // if they are small enough add them as int
+    if (a < MAX_JS_INT_AS_BIG_INT && b < MAX_JS_INT_AS_BIG_INT) {
+      return new BigInt.fromJsInt(toValidJsInt() % other.toValidJsInt());
+    }
+
+    // as BigInt
+    final result = a._euclidianDivision(b);
     if (result.remainder == _0) return _0;
     if (isPositive) return result.remainder;
     else return other.abs() - result.remainder;
@@ -202,12 +255,12 @@ class BigInt {
     BigInt remainder = this;
     BigInt quotien = _0;
     do {
-      BigInt inc = _1;
       BigInt c = divisor;
+      BigInt inc = _1;
       BigInt t = c * _10;
       while (t < remainder) {
-        c = t;
         inc *= _10;
+        c = t;
         t *= _10;
       }
       while (c <= remainder) {
@@ -224,12 +277,11 @@ class BigInt {
     if (isPositive && other.isNegative) return 1;
     if (isNegative && other.isPositive) return -1;
     if (isNegative && other.isNegative) return -((-this).compareTo(-other));
-    final a = value.toList();
-    final b = other.value.toList();
-    _normalize(a, b);
-    for (var i = a.length - 1; i >= 0; i--) {
-      if (a[i] > b[i]) return 1;
-      if (a[i] < b[i]) return -1;
+    if (value.length > other.value.length) return 1;
+    if (value.length < other.value.length) return -1;
+    for (var i = value.length - 1; i >= 0; i--) {
+      if (value[i] > other.value[i]) return 1;
+      if (value[i] < other.value[i]) return -1;
     }
     return 0;
   }

@@ -98,11 +98,13 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
 
   String toString() {
     if (numerator == _INT_0) return '0';
-    if (denominator == _INT_1) return '$numerator';
+    if (isInteger) return '$numerator';
     else return '$numerator/$denominator';
   }
 
   String toDecimalString() {
+    if (isInteger) return toStringAsFixed(0);
+
     // remove factor 2 and 5 of denominator to know if String representation is finished
     // in decimal system, division by 2 or 5 leads to a finished size of decimal part
     var denominator = this.denominator;
