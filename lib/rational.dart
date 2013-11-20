@@ -64,9 +64,9 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
     return new Rational._normalize(numerator, denominator);
   }
 
-  final T numerator, denominator;
+  final T _numerator, _denominator;
 
-  Rational._(this.numerator, this.denominator);
+  Rational._(this._numerator, this._denominator);
 
   factory Rational._normalized(numerator, denominator) => IS_JS ?
       new _RationalJs._normalized(numerator, denominator) :
@@ -90,16 +90,22 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
         : new Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
   }
 
-  bool get isInteger => denominator == _INT_1;
+  @Deprecated('can give bad value with dart2js')
+  int get numerator;
 
-  int get hashCode => (numerator + _INT_31 * denominator).hashCode;
+  @Deprecated('can give bad value with dart2js')
+  int get denominator;
 
-  bool operator ==(Rational other) => numerator == other.numerator && denominator == other.denominator;
+  bool get isInteger => _denominator == _INT_1;
+
+  int get hashCode => (_numerator + _INT_31 * _denominator).hashCode;
+
+  bool operator ==(Rational other) => _numerator == other._numerator && _denominator == other._denominator;
 
   String toString() {
-    if (numerator == _INT_0) return '0';
-    if (isInteger) return '$numerator';
-    else return '$numerator/$denominator';
+    if (_numerator == _INT_0) return '0';
+    if (isInteger) return '$_numerator';
+    else return '$_numerator/$_denominator';
   }
 
   String toDecimalString() {
@@ -107,7 +113,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
 
     // remove factor 2 and 5 of denominator to know if String representation is finished
     // in decimal system, division by 2 or 5 leads to a finished size of decimal part
-    var denominator = this.denominator;
+    var denominator = this._denominator;
     int fractionDigits = 0;
     while (denominator % _INT_2 == _INT_0) {
       denominator = denominator ~/ _INT_2;
@@ -117,7 +123,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
       denominator = denominator ~/ _INT_5;
       fractionDigits++;
     }
-    final hasLimitedLength = numerator % denominator == _INT_0;
+    final hasLimitedLength = _numerator % denominator == _INT_0;
     if (!hasLimitedLength) {
       fractionDigits = 10;
     }
@@ -129,24 +135,24 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   }
   // implementation of Comparable
 
-  int compareTo(Rational other) => (numerator * other.denominator).compareTo(other.numerator * denominator);
+  int compareTo(Rational other) => (_numerator * other._denominator).compareTo(other._numerator * _denominator);
 
   // implementation of num
 
   /** Addition operator. */
-  Rational operator +(Rational other) => new Rational._normalize(numerator * other.denominator + other.numerator * denominator, denominator * other.denominator);
+  Rational operator +(Rational other) => new Rational._normalize(_numerator * other._denominator + other._numerator * _denominator, _denominator * other._denominator);
 
   /** Subtraction operator. */
-  Rational operator -(Rational other) => new Rational._normalize(numerator * other.denominator - other.numerator * denominator, denominator * other.denominator);
+  Rational operator -(Rational other) => new Rational._normalize(_numerator * other._denominator - other._numerator * _denominator, _denominator * other._denominator);
 
   /** Multiplication operator. */
-  Rational operator *(Rational other) => new Rational._normalize(numerator * other.numerator, denominator * other.denominator);
+  Rational operator *(Rational other) => new Rational._normalize(_numerator * other._numerator, _denominator * other._denominator);
 
   /** Euclidean modulo operator. */
   Rational operator %(Rational other) => this.remainder(other) + (isNegative ? other.abs() : _0);
 
   /** Division operator. */
-  Rational operator /(Rational other) => new Rational._normalize(numerator * other.denominator, denominator * other.numerator);
+  Rational operator /(Rational other) => new Rational._normalize(_numerator * other._denominator, _denominator * other._numerator);
 
   /**
    * Truncating division operator.
@@ -157,7 +163,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   Rational operator ~/(Rational other) => (this / other).truncate();
 
   /** Negate operator. */
-  Rational operator -() => new Rational._normalized(-numerator, denominator);
+  Rational operator -() => new Rational._normalized(-_numerator, _denominator);
 
   /** Return the remainder from dividing this [num] by [other]. */
   Rational remainder(Rational other) => this - (this ~/ other) * other;
@@ -176,7 +182,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
 
   bool get isNaN => false;
 
-  bool get isNegative => numerator < _INT_0;
+  bool get isNegative => _numerator < _INT_0;
 
   bool get isInfinite => false;
 
@@ -254,7 +260,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   /** Truncates this [num] to an integer and returns the result as an [int]. */
   int toInt();
 
-  T _toInt() => numerator ~/ denominator;
+  T _toInt() => _numerator ~/ _denominator;
 
   /**
    * Return this [num] as a [double].
@@ -303,14 +309,18 @@ class _RationalJs extends Rational<BigInt> {
   _RationalJs._normalized(BigInt numerator, BigInt denominator) :
     super._(numerator, denominator);
 
+  int get numerator => int.parse('$_numerator');
+  int get denominator => int.parse('_denominator');
   int toInt() => int.parse(_toInt().toString());
-  double toDouble() => double.parse('$numerator') / double.parse('$denominator');
+  double toDouble() => double.parse('$_numerator') / double.parse('$_denominator');
 }
 
 class _RationalVM extends Rational<int> {
   _RationalVM._normalized(int numerator, int denominator) :
     super._(numerator, denominator);
 
-  int toInt() => numerator ~/ denominator;
-  double toDouble() => numerator / denominator;
+  int get numerator => _numerator;
+  int get denominator => _denominator;
+  int toInt() => _numerator ~/ _denominator;
+  double toDouble() => _numerator / _denominator;
 }
