@@ -19,8 +19,8 @@ import 'package:rational/rational.dart';
 
 * Start computing using `Rational.parse('1.23')` or `new Rational(12, 7)`.
 
-## Limitation ##
-**WARNING** : If you are using this package through dart2js, results may not be good. This is because dart2js does not implement yet integers with arbitrary precision. Once [issue 1533](http://code.google.com/p/dart/issues/detail?id=1533) fixed, you should be able to use it in javascript.
+## WARNING ##
+If you are using this package through dart2js, performances may not be good. This is because dart2js does not implement yet integers with arbitrary precision (see [issue 1533](http://code.google.com/p/dart/issues/detail?id=1533)) and this package contains a custom implementation of _bigint_.
 
 ## License ##
 Apache 2.0
