@@ -1,11 +1,13 @@
-import 'dart:math' show max, min, pow, log, LN10;
+import 'dart:math' show max, min, pow;
 
 final MAX_JS_INT = 9007199254740992;
 final MAX_JS_INT_AS_BIG_INT = new BigInt.fromJsInt(MAX_JS_INT);
 final _MAX_JS_INT_FOR_ADD = new BigInt.fromJsInt(MAX_JS_INT ~/ 2);
 final _BASE = 10000000;
-final _BASE_AS_BIG_INT = new BigInt.fromJsInt(10000000);
+final _BASE_AS_BIG_INT = new BigInt.fromJsInt(_BASE);
 final _LOG_BASE = 7;
+final _POWERS_OF_TEN = new List.generate(_LOG_BASE, (i) =>
+    new BigInt.fromJsInt(new List.filled(i, 10).fold(1, (t,e) => t *= 10)));
 
 _normalize(List<int> a, List<int> b) {
   final maxLength = max(a.length, b.length);
@@ -171,10 +173,20 @@ class BigInt {
   }
 
   BigInt operator *(BigInt other) {
+    if (is0 || other.is0) return _0;
     if (isPositive && other.isNegative) return -(this * (-other));
     if (isNegative && other.isPositive) return -((-this) * other);
     if (isNegative && other.isNegative) return (-this) * (-other);
     if (this < other) return other * this;
+
+    if (value[0] == 0) {
+      final zeros = value.takeWhile((e) => e == 0).toList();
+      return new BigInt((new BigInt(value.skip(zeros.length).toList(), true) * other).value..insertAll(0, zeros), true);
+    }
+    if (other.value[0] == 0) {
+      final zeros = other.value.takeWhile((e) => e == 0).toList();
+      return new BigInt((this * new BigInt(other.value.skip(zeros.length).toList(), true)).value..insertAll(0, zeros), true);
+    }
 
     // if they are small enough add them as int
     if (this < _BASE_AS_BIG_INT && other < _BASE_AS_BIG_INT) {
@@ -252,16 +264,35 @@ class BigInt {
       final b = divisor.toValidJsInt();
       return new _EuclidianDivisionResult(new BigInt.fromJsInt(a ~/ b), new BigInt.fromJsInt(a % b));
     }
+
+    // optimization :
+    final powerOfTens = <int, BigInt>{
+      0: _1, // 10^0
+    };
+    final divisorByPowerOfTens = <int, BigInt>{
+      0: divisor, // divisor * 10^0
+    };
+    var f = (int log, Map<int, BigInt> m) {
+      final index = log % _LOG_BASE;
+      final pad = log ~/ _LOG_BASE;
+      final a = m.putIfAbsent(index, () => m[log - 1] * _10);
+      return new BigInt(new List<int>.generate(pad + a.value.length,
+          (index) => index < pad ? 0 : a.value[index - pad]), true);
+      //return new BigInt(a.value.toList()..insertAll(0, new List.filled(pad, 0)), true);
+    };
+
     BigInt remainder = this;
     BigInt quotien = _0;
     do {
+      int log = 0;
       BigInt c = divisor;
-      BigInt inc = _1;
-      BigInt t = c * _10;
+      BigInt inc = f(log, powerOfTens);
+      BigInt t = f(log + 1, divisorByPowerOfTens);
       while (t < remainder) {
-        inc *= _10;
+        log++;
+        inc = f(log, powerOfTens);
         c = t;
-        t *= _10;
+        t = f(log + 1, divisorByPowerOfTens);
       }
       while (c <= remainder) {
         remainder -= c;
