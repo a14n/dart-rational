@@ -272,14 +272,16 @@ class BigInt {
     final divisorByPowerOfTens = <int, BigInt>{
       0: divisor, // divisor * 10^0
     };
-    var f = (int log, Map<int, BigInt> m) {
-      final index = log % _LOG_BASE;
-      final pad = log ~/ _LOG_BASE;
-      final a = m.putIfAbsent(index, () => m[log - 1] * _10);
-      return new BigInt(new List<int>.generate(pad + a.value.length,
-          (index) => index < pad ? 0 : a.value[index - pad]), true);
-      //return new BigInt(a.value.toList()..insertAll(0, new List.filled(pad, 0)), true);
-    };
+    var f = (int log, Map<int, BigInt> m) => m.putIfAbsent(log, () {
+      if (log < _LOG_BASE) return m[log - 1] * _10;
+      else {
+        final index = log % _LOG_BASE;
+        final pad = log ~/ _LOG_BASE;
+        final a = m[index];
+        return new BigInt(new List<int>.generate(pad + a.value.length,
+            (index) => index < pad ? 0 : a.value[index - pad]), true);
+      }
+    });
 
     BigInt remainder = this;
     BigInt quotien = _0;
