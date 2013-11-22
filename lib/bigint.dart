@@ -6,29 +6,8 @@ final _MAX_JS_INT_FOR_ADD = new BigInt.fromJsInt(MAX_JS_INT ~/ 2);
 final _BASE = 10000000;
 final _BASE_AS_BIG_INT = new BigInt.fromJsInt(_BASE);
 final _LOG_BASE = 7;
-final _POWERS_OF_TEN = new List.generate(_LOG_BASE, (i) =>
-    new BigInt.fromJsInt(new List.filled(i, 10).fold(1, (t,e) => t *= 10)));
 
-_normalize(List<int> a, List<int> b) {
-  final maxLength = max(a.length, b.length);
-  final minLength = min(a.length, b.length);
-  a.length = maxLength;
-  b.length = maxLength;
-  for (int i = minLength; i < maxLength; i++) {
-    if (a[i] == null) a[i] = 0;
-    if (b[i] == null) b[i] = 0;
-  }
-  for (int i = maxLength - 1; i >= 0; i--) {
-    if (a[i] == 0 && b[i] == 0) {
-      a.removeLast();
-      b.removeLast();
-    } else break;
-  }
-  if (a.isEmpty) {
-    a = [0];
-    b = [0];
-  }
-}
+int _getOr0(List<int> l, int index) => index < l.length ? l[index] : 0;
 
 class _EuclidianDivisionResult {
   final BigInt quotien;
@@ -128,13 +107,13 @@ class BigInt {
     }
 
     // else add as BigInt
-    final a = value.toList();
-    final b = other.value.toList();
-    _normalize(a, b);
+    final a = value;
+    final b = other.value;
+    final maxLength = max(a.length, b.length);
     final  result = [];
     int carry = 0;
-    for (int i = 0; i < a.length; i++) {
-      int sum = a[i] + b[i] + carry;
+    for (int i = 0; i < maxLength; i++) {
+      int sum = _getOr0(a, i) + _getOr0(b, i) + carry;
       carry = sum >= _BASE ? 1 : 0;
       sum -= carry * _BASE;
       result.add(sum);
@@ -158,16 +137,17 @@ class BigInt {
     }
 
     // as BigInt
-    final a = value.toList();
-    final b = other.value.toList();
-    _normalize(a, b);
+    final a = value;
+    final b = other.value;
+    final maxLength = max(a.length, b.length);
     final  result = [];
     int borrow = 0;
-    for (int i = 0; i < a.length; i++) {
-      a[i] -= borrow;
-      borrow = a[i] < b[i] ? 1 : 0;
-      int minuend = (borrow * _BASE) + a[i] - b[i];
-      result.add(minuend);
+    for (int i = 0; i < maxLength; i++) {
+      int aa = _getOr0(a, i) - borrow;
+      int bb = _getOr0(b, i);
+      borrow = aa < bb ? 1 : 0;
+      int diff = (borrow * _BASE) + aa - bb;
+      result.add(diff);
     }
     return new BigInt(result, true);
   }
