@@ -284,9 +284,10 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
         mul *= _INT_10;
       }
       final mulRat = new Rational._normalize(mul, _INT_1);
-      final tmp = (abs() + _1) * mulRat;
+      final lessThanOne = abs() < _1;
+      final tmp = (lessThanOne ? (abs() + _1) : abs()) * mulRat;
       final tmpRound = tmp.round();
-      final intPart = ((tmpRound ~/ mulRat) - _1)._toInt();
+      final intPart = (lessThanOne ? ((tmpRound ~/ mulRat) - _1) : (tmpRound ~/ mulRat))._toInt();
       final decimalPart = tmpRound._toInt().toString().substring(intPart.toString().length);
       return '${isNegative ? '-' : ''}${intPart}.${decimalPart}';
     }
