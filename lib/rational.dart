@@ -313,7 +313,7 @@ class _RationalJs extends Rational<BigInt> {
     super._(numerator, denominator);
 
   int get numerator => int.parse('$_numerator');
-  int get denominator => int.parse('_denominator');
+  int get denominator => int.parse('$_denominator');
   int toInt() => int.parse(_toInt().toString());
   double toDouble() => double.parse('$_numerator') / double.parse('$_denominator');
 }
