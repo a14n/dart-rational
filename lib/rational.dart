@@ -100,7 +100,9 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
 
   int get hashCode => (_numerator + _INT_31 * _denominator).hashCode;
 
-  bool operator ==(Rational other) => _numerator == other._numerator && _denominator == other._denominator;
+  bool operator ==(Object other) => other is Rational
+      && _numerator == other._numerator
+      && _denominator == other._denominator;
 
   String toString() {
     if (_numerator == _INT_0) return '0';
