@@ -299,7 +299,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    * Converts a [num] to a string in decimal exponential notation with
    * [fractionDigits] digits after the decimal point.
    */
-  String toStringAsExponential(int fractionDigits)  => toDouble().toStringAsExponential(fractionDigits);
+  String toStringAsExponential([int fractionDigits])  => toDouble().toStringAsExponential(fractionDigits);
 
   /**
    * Converts a [num] to a string representation with [precision]
