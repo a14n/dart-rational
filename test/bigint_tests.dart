@@ -9,8 +9,11 @@ main() {
   test('string validation', () {
     expect(() => p('1'), returnsNormally);
     expect(() => p('-1'), returnsNormally);
+    expect(() => p('+1'), returnsNormally);
     expect(() => p('1.'), throws);
     expect(() => p('1.0'), throws);
+    expect(() => p('++1'), throws);
+    expect(() => p('--1'), throws);
   });
   test('valid js int', () {
     for(int i = 0; i < 100; i++) {
