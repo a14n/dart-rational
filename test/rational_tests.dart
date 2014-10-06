@@ -9,6 +9,7 @@ main() {
   test('string validation', () {
     expect(() => p('1'), returnsNormally);
     expect(() => p('-1'), returnsNormally);
+    expect(() => p('+1'), returnsNormally);
     expect(() => p('1.'), throws);
     expect(() => p('1.0'), returnsNormally);
   });
@@ -16,6 +17,7 @@ main() {
     expect(p('1').isInteger, equals(true));
     expect(p('0').isInteger, equals(true));
     expect(p('-1').isInteger, equals(true));
+    expect(p('+1').isInteger, equals(true));
     expect(p('-1.0').isInteger, equals(true));
     expect(p('1.2').isInteger, equals(false));
     expect(p('-1.21').isInteger, equals(false));
@@ -24,6 +26,7 @@ main() {
     expect(p('1') == (p('1')), equals(true));
     expect(p('1') == (p('2')), equals(false));
     expect(p('1') == (p('1.0')), equals(true));
+    expect(p('1') == (p('+1')), equals(true));
     expect(p('1') == (p('2.0')), equals(false));
     expect(p('1') != (p('1')), equals(false));
     expect(p('1') != (p('2')), equals(true));
