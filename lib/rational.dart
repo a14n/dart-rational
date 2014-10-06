@@ -18,7 +18,7 @@ import 'package:rational/bigint.dart';
 
 final IS_JS = identical(1, 1.0);
 
-final _PATTERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
+final _PATTERN = new RegExp(r"^([+-]?\d+)(\.\d+)?$");
 
 final _0 = new Rational(0);
 final _1 = new Rational(1);
