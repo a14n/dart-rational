@@ -24,7 +24,7 @@ final _10 = new BigInt.fromJsInt(10);
 
 class BigInt {
   static BigInt parse(String text) {
-    bool isPositive = text.startsWith('-');
+    bool isPositive = !text.startsWith('-');
     if (text.startsWith(new RegExp('[+-]'))) {
       text = text.substring(1);
     }
