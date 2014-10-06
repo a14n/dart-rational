@@ -22,7 +22,7 @@ main() {
     expect(p('1.2').isInteger, equals(false));
     expect(p('-1.21').isInteger, equals(false));
   });
-  test('operator ==(Decimal other)', () {
+  test('operator ==(Rational other)', () {
     expect(p('1') == (p('1')), equals(true));
     expect(p('1') == (p('2')), equals(false));
     expect(p('1') == (p('1.0')), equals(true));
@@ -40,39 +40,39 @@ main() {
     expect((p('1')/p('3')).toDecimalString(), equals('0.3333333333'));
     expect((p('1.0000000000000000000000000000000000000000000000001') * p('1.0000000000000000000000000000000000000000000000001')).toDecimalString(), equals('1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
   });
-  test('compareTo(Decimal other)', () {
+  test('compareTo(Rational other)', () {
     expect(p('1').compareTo(p('1')), equals(0));
     expect(p('1').compareTo(p('1.0')), equals(0));
     expect(p('1').compareTo(p('1.1')), equals(-1));
     expect(p('1').compareTo(p('0.9')), equals(1));
   });
-  test('operator +(Decimal other)', () {
+  test('operator +(Rational other)', () {
     expect((p('1') + p('1')).toDecimalString(), equals('2'));
     expect((p('1.1') + p('1')).toDecimalString(), equals('2.1'));
     expect((p('1.1') + p('0.9')).toDecimalString(), equals('2'));
     expect((p('31878018903828899277492024491376690701584023926880.0') + p('0.9')).toDecimalString(), equals('31878018903828899277492024491376690701584023926880.9'));
   });
-  test('operator -(Decimal other)', () {
+  test('operator -(Rational other)', () {
     expect((p('1') - p('1')).toDecimalString(), equals('0'));
     expect((p('1.1') - p('1')).toDecimalString(), equals('0.1'));
     expect((p('0.1') - p('1.1')).toDecimalString(), equals('-1'));
     expect((p('31878018903828899277492024491376690701584023926880.0') - p('0.9')).toDecimalString(), equals('31878018903828899277492024491376690701584023926879.1'));
   });
-  test('operator *(Decimal other)', () {
+  test('operator *(Rational other)', () {
     expect((p('1') * p('1')).toDecimalString(), equals('1'));
     expect((p('1.1') * p('1')).toDecimalString(), equals('1.1'));
     expect((p('1.1') * p('0.1')).toDecimalString(), equals('0.11'));
     expect((p('1.1') * p('0')).toDecimalString(), equals('0'));
     expect((p('31878018903828899277492024491376690701584023926880.0') * p('10')).toDecimalString(), equals('318780189038288992774920244913766907015840239268800'));
   });
-  test('operator %(Decimal other)', () {
+  test('operator %(Rational other)', () {
     expect((p('2') % p('1')).toDecimalString(), equals('0'));
     expect((p('0') % p('1')).toDecimalString(), equals('0'));
     expect((p('8.9') % p('1.1')).toDecimalString(), equals('0.1'));
     expect((p('-1.2') % p('0.5')).toDecimalString(), equals('0.3'));
     expect((p('-1.2') % p('-0.5')).toDecimalString(), equals('0.3'));
   });
-  test('operator /(Decimal other)', () {
+  test('operator /(Rational other)', () {
     expect(() => p('1') / p('0'), throws);
     expect((p('1') / p('1')).toDecimalString(), equals('1'));
     expect((p('1.1') / p('1')).toDecimalString(), equals('1.1'));
@@ -80,7 +80,7 @@ main() {
     expect((p('0') / p('0.2315')).toDecimalString(), equals('0'));
     expect((p('31878018903828899277492024491376690701584023926880.0') / p('10')).toDecimalString(), equals('3187801890382889927749202449137669070158402392688'));
   });
-  test('operator ~/(Decimal other)', () {
+  test('operator ~/(Rational other)', () {
     expect(() => p('1') ~/ p('0'), throws);
     expect((p('3') ~/ p('2')).toDecimalString(), equals('1'));
     expect((p('1.1') ~/ p('1')).toDecimalString(), equals('1'));
@@ -91,32 +91,32 @@ main() {
     expect((-p('1')).toDecimalString(), equals('-1'));
     expect((-p('-1')).toDecimalString(), equals('1'));
   });
-  test('remainder(Decimal other)', () {
+  test('remainder(Rational other)', () {
     expect((p('2').remainder(p('1'))).toDecimalString(), equals('0'));
     expect((p('0').remainder(p('1'))).toDecimalString(), equals('0'));
     expect((p('8.9').remainder(p('1.1'))).toDecimalString(), equals('0.1'));
     expect((p('-1.2').remainder(p('0.5'))).toDecimalString(), equals('-0.2'));
     expect((p('-1.2').remainder(p('-0.5'))).toDecimalString(), equals('-0.2'));
   });
-  test('operator <(Decimal other)', () {
+  test('operator <(Rational other)', () {
     expect(p('1') < p('1'), equals(false));
     expect(p('1') < p('1.0'), equals(false));
     expect(p('1') < p('1.1'), equals(true));
     expect(p('1') < p('0.9'), equals(false));
   });
-  test('operator <=(Decimal other)', () {
+  test('operator <=(Rational other)', () {
     expect(p('1') <= p('1'), equals(true));
     expect(p('1') <= p('1.0'), equals(true));
     expect(p('1') <= p('1.1'), equals(true));
     expect(p('1') <= p('0.9'), equals(false));
   });
-  test('operator >(Decimal other)', () {
+  test('operator >(Rational other)', () {
     expect(p('1') > p('1'), equals(false));
     expect(p('1') > p('1.0'), equals(false));
     expect(p('1') > p('1.1'), equals(false));
     expect(p('1') > p('0.9'), equals(true));
   });
-  test('operator >=(Decimal other)', () {
+  test('operator >=(Rational other)', () {
     expect(p('1') >= p('1'), equals(true));
     expect(p('1') >= p('1.0'), equals(true));
     expect(p('1') >= p('1.1'), equals(false));
@@ -160,7 +160,7 @@ main() {
     expect((p('-2.51').truncate()).toDecimalString(), equals('-2'));
     expect((p('-2').truncate()).toDecimalString(), equals('-2'));
   });
-  test('clamp(Decimal lowerLimit, Decimal upperLimit)', () {
+  test('clamp(Rational lowerLimit, Rational upperLimit)', () {
     expect((p('2.51').clamp(p('1'), p('3'))).toDecimalString(), equals('2.51'));
     expect((p('2.51').clamp(p('2.6'), p('3'))).toDecimalString(), equals('2.6'));
     expect((p('2.51').clamp(p('1'), p('2.5'))).toDecimalString(), equals('2.5'));
