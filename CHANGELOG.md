@@ -1,4 +1,8 @@
 
+# v0.1.7 (2014-10-07)
+
+- `Rational.parse` accepts strings in scientific notation (eg. `1.5e-3`).
+
 # v0.1.6 (2014-10-06)
 
 - `BigInt.parse` accepts an optional prepending `+` for positive integers.
