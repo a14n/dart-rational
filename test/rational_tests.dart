@@ -12,6 +12,16 @@ main() {
     expect(() => p('+1'), returnsNormally);
     expect(() => p('1.'), throws);
     expect(() => p('1.0'), returnsNormally);
+    expect(() => p('1.0e5'), returnsNormally);
+    expect(() => p('1.0e-5'), returnsNormally);
+    expect(() => p('1.0e+5'), returnsNormally);
+    expect(() => p('1e+5'), returnsNormally);
+  });
+  test('parse scientific notation', () {
+    expect(p("1.0e3"), equals(p("1000")));
+    expect(p("1e+3"), equals(p("1000")));
+    expect(p("34.5e-2"), equals(p("0.345")));
+    expect(p("345e-5"), equals(p("0.00345")));
   });
   test('get isInteger', () {
     expect(p('1').isInteger, equals(true));
@@ -21,6 +31,8 @@ main() {
     expect(p('-1.0').isInteger, equals(true));
     expect(p('1.2').isInteger, equals(false));
     expect(p('-1.21').isInteger, equals(false));
+    expect(p('1.0e4').isInteger, equals(true));
+    expect(p('1e-4').isInteger, equals(false));
   });
   test('operator ==(Rational other)', () {
     expect(p('1') == (p('1')), equals(true));

@@ -18,7 +18,7 @@ import 'package:rational/bigint.dart';
 
 final IS_JS = identical(1, 1.0);
 
-final _PATTERN = new RegExp(r"^([+-]?\d+)(\.\d+)?$");
+final _PATTERN = new RegExp(r"^([+-]?\d+)(\.\d+)?([eE][+-]?\d+)?$");
 
 final _0 = new Rational(0);
 final _1 = new Rational(1);
@@ -50,6 +50,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
     if (match == null) throw new FormatException("$decimalValue is not a valid format");
     final group1 = match.group(1);
     final group2 = match.group(2);
+    final group3 = match.group(3);
 
     var numerator = _INT_0;
     var denominator = _INT_1;
@@ -60,6 +61,17 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
       numerator = _parseInt('${group1}${group2.substring(1)}');
     } else {
       numerator = _parseInt(group1);
+    }
+    if(group3 != null) {
+      var exponent = _parseInt(group3.substring(1));
+      while(exponent > 0) {
+        numerator = numerator * _INT_10;
+        exponent--;
+      }
+      while(exponent < 0) {
+        denominator = denominator * _INT_10;
+        exponent++;
+      }
     }
     return new Rational._normalize(numerator, denominator);
   }
