@@ -16,12 +16,23 @@ main() {
     expect(() => p('1.0e-5'), returnsNormally);
     expect(() => p('1.0e+5'), returnsNormally);
     expect(() => p('1e+5'), returnsNormally);
+    expect(() => p('198765432'), returnsNormally);
+    expect(() => p('1,000'), returnsNormally);
+    expect(() => p('1,000.5554'), returnsNormally);
+    expect(() => p('-10,000e+5'), returnsNormally);
+    expect(() => p('01,000'), throws);
+    expect(() => p('1,000,00'), throws);
+    expect(() => p('0,100,000'), throws);
   });
   test('parse scientific notation', () {
     expect(p("1.0e3"), equals(p("1000")));
     expect(p("1e+3"), equals(p("1000")));
     expect(p("34.5e-2"), equals(p("0.345")));
     expect(p("345e-5"), equals(p("0.00345")));
+  });
+  test('parse thousand separator', () {
+    expect(p("1,000"), equals(p("1000")));
+    expect(p("1,000,000"), equals(p("1e6")));
   });
   test('get isInteger', () {
     expect(p('1').isInteger, equals(true));
