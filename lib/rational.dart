@@ -18,7 +18,7 @@ import 'package:rational/bigint.dart';
 
 final IS_JS = identical(1, 1.0);
 
-final _PATTERN = new RegExp(r"^([+-]?\d+)(\.\d+)?([eE][+-]?\d+)?$");
+final _PATTERN = new RegExp(r"^([+-]?((\d+)|([1-9]\d{0,2}(\,\d{3})*)))(\.\d+)?([eE][+-]?\d+)?$");
 
 final _0 = new Rational(0);
 final _1 = new Rational(1);
@@ -48,22 +48,22 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   static Rational parse(String decimalValue) {
     final match = _PATTERN.firstMatch(decimalValue);
     if (match == null) throw new FormatException("$decimalValue is not a valid format");
-    final group1 = match.group(1);
-    final group2 = match.group(2);
-    final group3 = match.group(3);
+    final groupUnits    = match.group(1).replaceAll(",", "");
+    final groupDecimals = match.group(6);
+    final groupExponent = match.group(7);
 
     var numerator = _INT_0;
     var denominator = _INT_1;
-    if (group2 != null) {
-      for (int i = 1; i < group2.length; i++) {
+    if (groupDecimals != null) {
+      for (int i = 1; i < groupDecimals.length; i++) {
         denominator = denominator * _INT_10;
       }
-      numerator = _parseInt('${group1}${group2.substring(1)}');
+      numerator = _parseInt('${groupUnits}${groupDecimals.substring(1)}');
     } else {
-      numerator = _parseInt(group1);
+      numerator = _parseInt(groupUnits);
     }
-    if(group3 != null) {
-      var exponent = _parseInt(group3.substring(1));
+    if(groupExponent != null) {
+      var exponent = _parseInt(groupExponent.substring(1));
       while(exponent > 0) {
         numerator = numerator * _INT_10;
         exponent--;
