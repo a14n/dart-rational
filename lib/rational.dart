@@ -204,12 +204,8 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   Rational round() {
     final abs = this.abs();
     final absBy10 =  abs * _10;
-    Rational r;
-    if (absBy10 % _10 < _5) {
-      r = abs.truncate();
-    } else {
-      r = abs.truncate() + _1;
-    }
+    Rational r = abs.truncate();
+    if (absBy10 % _10 >= _5) r += _1;
     return isNegative ? -r : r;
   }
 
@@ -283,10 +279,8 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   bool get hasFinitePrecision {
     // the denominator should only be a product of powers of 2 and 5
     var den = _denominator;
-    while(den % _INT_5 == _INT_0)
-      den = den ~/ _INT_5;
-    while(den % _INT_2 == _INT_0)
-      den = den ~/ _INT_2;
+    while (den % _INT_5 == _INT_0) den = den ~/ _INT_5;
+    while (den % _INT_2 == _INT_0) den = den ~/ _INT_2;
     return den == 1;
   }
 
@@ -300,12 +294,11 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    * i.e. when [hasFinitePrecision] is [false].
    */
   int get precision {
-    if(!hasFinitePrecision)
+    if (!hasFinitePrecision) {
       throw new StateError("This number has an infinite precision: $this");
-    var x = _numerator;
-    while(x % _denominator != _INT_0) {
-      x = x * _INT_10;
     }
+    var x = _numerator;
+    while (x % _denominator != _INT_0) x *= _INT_10;
     x = x ~/ _denominator;
     return x.toString().length;
   }
@@ -319,13 +312,14 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    * i.e. when [hasFinitePrecision] is [false].
    */
   int get scale {
-    if(!hasFinitePrecision)
+    if (!hasFinitePrecision) {
       throw new StateError("This number has an infinite precision: $this");
+    }
     var i = 0;
     var x = _numerator;
-    while(x % _denominator != _INT_0) {
+    while (x % _denominator != _INT_0) {
       i++;
-      x = x * _INT_10;
+      x *= _INT_10;
     }
     return i;
   }
@@ -339,9 +333,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
       return round()._toInt().toString();
     } else {
       var mul = _INT_1;
-      for (int i = 0; i < fractionDigits; i++) {
-        mul *= _INT_10;
-      }
+      for (int i = 0; i < fractionDigits; i++) mul *= _INT_10;
       final mulRat = new Rational._normalize(mul, _INT_1);
       final lessThanOne = abs() < _1;
       final tmp = (lessThanOne ? (abs() + _1) : abs()) * mulRat;
