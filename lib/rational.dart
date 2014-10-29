@@ -125,22 +125,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   String toDecimalString() {
     if (isInteger) return toStringAsFixed(0);
 
-    // remove factor 2 and 5 of denominator to know if String representation is finished
-    // in decimal system, division by 2 or 5 leads to a finished size of decimal part
-    var denominator = this._denominator;
-    int fractionDigits = 0;
-    while (denominator % _INT_2 == _INT_0) {
-      denominator = denominator ~/ _INT_2;
-      fractionDigits++;
-    }
-    while (denominator % _INT_5 == _INT_0) {
-      denominator = denominator ~/ _INT_5;
-      fractionDigits++;
-    }
-    final hasLimitedLength = _numerator % denominator == _INT_0;
-    if (!hasLimitedLength) {
-      fractionDigits = 10;
-    }
+    int fractionDigits = hasFinitePrecision ? scale : 10;
     String asString = toStringAsFixed(fractionDigits);
     while (asString.contains('.') && (asString.endsWith('0') || asString.endsWith('.'))) {
       asString = asString.substring(0, asString.length - 1);
@@ -284,6 +269,59 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    * approximation may be infinite.
    */
   double toDouble();
+
+  /**
+   * Inspect if this [num] has a finite precision.
+   */
+  bool get hasFinitePrecision {
+    // the denominator should only be a product of powers of 2 and 5
+    var den = _denominator;
+    while(den % _INT_5 == _INT_0)
+      den = den ~/ _INT_5;
+    while(den % _INT_2 == _INT_0)
+      den = den ~/ _INT_2;
+    return den == 1;
+  }
+
+  /**
+   * The precision of this [num].
+   *
+   * The sum of the number of digits before and after
+   * the decimal point.
+   *
+   * Throws [StateError] if the precision is infinite,
+   * i.e. when [hasFinitePrecision] is [false].
+   */
+  int get precision {
+    if(!hasFinitePrecision)
+      throw new StateError("This number has an infinite precision: $this");
+    var x = _numerator;
+    while(x % _denominator != _INT_0) {
+      x = x * _INT_10;
+    }
+    x = x ~/ _denominator;
+    return x.toString().length;
+  }
+
+  /**
+   * The scale of this [num].
+   *
+   * The number of digits after the decimal point.
+   *
+   * Throws [StateError] if the scale is infinite,
+   * i.e. when [hasFinitePrecision] is [false].
+   */
+  int get scale {
+    if(!hasFinitePrecision)
+      throw new StateError("This number has an infinite precision: $this");
+    var i = 0;
+    var x = _numerator;
+    while(x % _denominator != _INT_0) {
+      i++;
+      x = x * _INT_10;
+    }
+    return i;
+  }
 
   /**
    * Converts a [num] to a string representation with [fractionDigits]
