@@ -1,4 +1,12 @@
 
+# v0.1.8 (2014-10-29)
+
+- fix bugs with dart2js 
+- add `Rational.signum`
+- add `Rational.hasFinitePrecision`
+- add `Rational.precision`
+- add `Rational.scale`
+
 # v0.1.7 (2014-10-07)
 
 - `Rational.parse` accepts strings in scientific notation (eg. `1.5e-3`).
