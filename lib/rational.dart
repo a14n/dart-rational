@@ -189,6 +189,13 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
   Rational abs() => isNegative ? (-this) : this;
 
   /**
+   * The signum function value of this [num].
+   *
+   * E.e. -1, 0 or 1 as the value of this [num] is negative, zero or positive.
+   */
+  int get signum => compareTo(_0);
+
+  /**
    * Returns the integer value closest to this [num].
    *
    * Rounds away from zero when there is no closest integer:

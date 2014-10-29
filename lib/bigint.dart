@@ -22,7 +22,7 @@ final _2 = new BigInt.fromJsInt(2);
 final _5 = new BigInt.fromJsInt(5);
 final _10 = new BigInt.fromJsInt(10);
 
-class BigInt {
+class BigInt implements Comparable<BigInt> {
   static BigInt parse(String text) {
     bool isPositive = !text.startsWith('-');
     if (text.startsWith(new RegExp('[+-]'))) {
