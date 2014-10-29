@@ -1,4 +1,8 @@
 
+# v0.1.8+1 (2014-10-29)
+
+- fix a bug for `Rational.precision` on negative number.
+
 # v0.1.8 (2014-10-29)
 
 - fix bugs with dart2js 
