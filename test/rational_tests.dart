@@ -208,4 +208,30 @@ main() {
       });
     });
   });
+  test('hasFinitePrecision', () {
+    [p('100'), p('100.100'), p('1')/p('5'), (p('1')/p('3'))*p('3'), p('0.00000000000000000000001')].forEach((Rational r) {
+      expect(r.hasFinitePrecision, isTrue);
+    });
+    [p('1')/p('3')].forEach((Rational r) {
+      expect(r.hasFinitePrecision, isFalse);
+    });
+  });
+  test('precision', () {
+    expect(p('100').precision, equals(3));
+    expect(p('10000').precision, equals(5));
+    expect(p('100.000').precision, equals(3));
+    expect(p('100.1').precision, equals(4));
+    expect(p('100.0000001').precision, equals(10));
+    expect(p('100.000000000000000000000000000001').precision, equals(33));
+    expect(() => (p('1')/p('3')).precision, throws);
+  });
+  test('scale', () {
+    expect(p('100').scale, equals(0));
+    expect(p('10000').scale, equals(0));
+    expect(p('100.000').scale, equals(0));
+    expect(p('100.1').scale, equals(1));
+    expect(p('100.0000001').scale, equals(7));
+    expect(p('100.000000000000000000000000000001').scale, equals(30));
+    expect(() => (p('1')/p('3')).scale, throws);
+  });
 }
