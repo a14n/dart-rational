@@ -64,13 +64,13 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
     }
     if(group3 != null) {
       var exponent = _parseInt(group3.substring(1));
-      while(exponent > 0) {
+      while(exponent > _INT_0) {
         numerator = numerator * _INT_10;
-        exponent--;
+        exponent -= _INT_1;
       }
-      while(exponent < 0) {
+      while(exponent < _INT_0) {
         denominator = denominator * _INT_10;
-        exponent++;
+        exponent += _INT_1;
       }
     }
     return new Rational._normalize(numerator, denominator);
@@ -259,7 +259,11 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    */
   Rational clamp(Rational lowerLimit, Rational upperLimit) => this < lowerLimit ? lowerLimit : this > upperLimit ? upperLimit : this;
 
-  /** Truncates this [num] to an integer and returns the result as an [int]. */
+  /**
+   * Truncates this [num] to an integer and returns the result as an [int].
+   *
+   * **WARNING for dart2js** : It can give bad result for large number.
+   */
   int toInt();
 
   T _toInt() => _numerator ~/ _denominator;
@@ -281,14 +285,14 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
     var den = _denominator;
     while (den % _INT_5 == _INT_0) den = den ~/ _INT_5;
     while (den % _INT_2 == _INT_0) den = den ~/ _INT_2;
-    return den == 1;
+    return den == _INT_1;
   }
 
   /**
    * The precision of this [num].
    *
-   * The sum of the number of digits before and after
-   * the decimal point.
+   * The sum of the number of digits before and after the decimal point.
+   * **WARNING for dart2js** : It can give bad result for large number.
    *
    * Throws [StateError] if the precision is infinite,
    * i.e. when [hasFinitePrecision] is [false].
@@ -307,6 +311,7 @@ abstract class Rational<T extends dynamic/*int|BigInt*/> implements Comparable<R
    * The scale of this [num].
    *
    * The number of digits after the decimal point.
+   * **WARNING for dart2js** : It can give bad result for large number.
    *
    * Throws [StateError] if the scale is infinite,
    * i.e. when [hasFinitePrecision] is [false].

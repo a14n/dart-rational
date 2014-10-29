@@ -1,4 +1,4 @@
-library tests;
+library test.bigint;
 
 import 'package:unittest/unittest.dart';
 import 'package:rational/bigint.dart';

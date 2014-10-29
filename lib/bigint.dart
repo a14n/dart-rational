@@ -1,3 +1,5 @@
+library bigint;
+
 import 'dart:math' show max, min, pow;
 
 final MAX_JS_INT = 9007199254740992;

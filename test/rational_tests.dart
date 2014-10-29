@@ -1,4 +1,4 @@
-library tests;
+library test.rational;
 
 import 'package:unittest/unittest.dart';
 import 'package:rational/rational.dart';
