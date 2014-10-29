@@ -149,6 +149,11 @@ main() {
     expect((p('-1.49').abs()).toDecimalString(), equals('1.49'));
     expect((p('1.498').abs()).toDecimalString(), equals('1.498'));
   });
+  test('signum', () {
+    expect(p('-1.49').signum, equals(-1));
+    expect(p('1.49').signum, equals(1));
+    expect(p('0').signum, equals(0));
+  });
   test('floor()', () {
     expect((p('1').floor()).toDecimalString(), equals('1'));
     expect((p('-1').floor()).toDecimalString(), equals('-1'));
