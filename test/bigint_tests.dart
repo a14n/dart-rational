@@ -7,7 +7,7 @@ p(String value) => BigInt.parse(value);
 
 main() {
   test('string validation', () {
-    expect(() => p('1'), returnsNormallys);
+    expect(() => p('1'), returnsNormally);
     expect(() => p('-1'), returnsNormally);
     expect(() => p('+1'), returnsNormally);
     expect(() => p('1.'), throws);
