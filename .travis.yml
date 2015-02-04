@@ -1,2 +1,2 @@
 language: dart
-before_script: dartanalyzer --fatal-warnings **/*.dart
+script: dartanalyzer --fatal-warnings **/*.dart
