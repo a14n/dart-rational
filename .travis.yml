@@ -1,0 +1,2 @@
+language: dart
+before_script: dartanalyzer **/*.dart
