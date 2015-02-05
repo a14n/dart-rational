@@ -1,9 +1,11 @@
-Dart Rational
-=============
+# Dart Rational
+
+[![Build Status](https://travis-ci.org/a14n/dart-rational.svg?branch=master)](https://travis-ci.org/a14n/dart-rational)
+
 This project enable to make computations on rational numbers.
 The package also contains an implementation of _arbitrarily sized integer_ that works with dart2js.
 
-## Usage ##
+## Usage
 To use this library in your code :
 * add a dependency in your `pubspec.yaml` :
 
@@ -32,5 +34,5 @@ import 'package:rational/bigint.dart';
 
 * Start computing using `BigInt.parse('12345678901234567890')`.
 
-## License ##
+## License
 Apache 2.0
