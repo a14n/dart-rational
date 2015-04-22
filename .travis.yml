@@ -1,2 +1,5 @@
 language: dart
-with_content_shell: true
+sudo: false
+script:
+  - pub global activate test
+  - pub run test:test
