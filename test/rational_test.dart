@@ -1,6 +1,6 @@
 library test.rational;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:rational/rational.dart';
 
 p(String value) => Rational.parse(value);

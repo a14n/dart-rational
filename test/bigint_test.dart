@@ -1,6 +1,6 @@
 library test.bigint;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:rational/bigint.dart';
 
 p(String value) => BigInt.parse(value);
