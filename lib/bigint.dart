@@ -1,3 +1,17 @@
+// Copyright (c) 2015, Alexandre Ardhuin
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 library bigint;
 
 import 'dart:math' show max, min, pow;
@@ -12,10 +26,10 @@ final _LOG_BASE = 7;
 int _getOr0(List<int> l, int index) => index < l.length ? l[index] : 0;
 
 class _EuclidianDivisionResult {
-  final BigInt quotien;
+  final BigInt quotient;
   final BigInt remainder;
 
-  _EuclidianDivisionResult(this.quotien, this.remainder);
+  _EuclidianDivisionResult(this.quotient, this.remainder);
 }
 
 final _0 = new BigInt.fromJsInt(0);
@@ -30,7 +44,9 @@ class BigInt implements Comparable<BigInt> {
     if (text.startsWith(new RegExp('[+-]'))) {
       text = text.substring(1);
     }
-    if (!new RegExp(r'^[0-9]+$').hasMatch(text)) throw new FormatException('Invalid integer');
+    if (!new RegExp(r'^[0-9]+$').hasMatch(text)) {
+      throw new FormatException('Invalid integer');
+    }
     final value = [];
     while (text.isNotEmpty) {
       final divider = text.length > _LOG_BASE ? text.length - _LOG_BASE : 0;
@@ -73,6 +89,7 @@ class BigInt implements Comparable<BigInt> {
   bool get is10 => value.length == 1 && isPositive && value[0] == 10;
 
   bool get isValidJsInt => this <= MAX_JS_INT_AS_BIG_INT;
+
   int toValidJsInt() {
     if (is0) return 0;
     if (value.length == 1) return isPositive ? value[0] : -value[0];
@@ -111,7 +128,7 @@ class BigInt implements Comparable<BigInt> {
     final a = value;
     final b = other.value;
     final maxLength = max(a.length, b.length);
-    final  result = [];
+    final result = [];
     int carry = 0;
     for (int i = 0; i < maxLength; i++) {
       int sum = _getOr0(a, i) + _getOr0(b, i) + carry;
@@ -141,7 +158,7 @@ class BigInt implements Comparable<BigInt> {
     final a = value;
     final b = other.value;
     final maxLength = max(a.length, b.length);
-    final  result = [];
+    final result = [];
     int borrow = 0;
     for (int i = 0; i < maxLength; i++) {
       int aa = _getOr0(a, i) - borrow;
@@ -162,11 +179,15 @@ class BigInt implements Comparable<BigInt> {
 
     if (value[0] == 0) {
       final zeros = value.takeWhile((e) => e == 0).toList();
-      return new BigInt((new BigInt(value.skip(zeros.length).toList(), true) * other).value..insertAll(0, zeros), true);
+      return new BigInt(
+          (new BigInt(value.skip(zeros.length).toList(), true) * other).value
+        ..insertAll(0, zeros), true);
     }
     if (other.value[0] == 0) {
       final zeros = other.value.takeWhile((e) => e == 0).toList();
-      return new BigInt((this * new BigInt(other.value.skip(zeros.length).toList(), true)).value..insertAll(0, zeros), true);
+      return new BigInt((this *
+          new BigInt(other.value.skip(zeros.length).toList(), true)).value
+        ..insertAll(0, zeros), true);
     }
 
     // if they are small enough add them as int
@@ -179,7 +200,7 @@ class BigInt implements Comparable<BigInt> {
     final b = value;
     BigInt result = _0;
     for (int i = 0; i < a.length; i++) {
-      final  partResult = [];
+      final partResult = [];
       int carry = 0;
       for (int j = 0; j < b.length; j++) {
         int sum = a[i] * b[j] + carry;
@@ -208,17 +229,20 @@ class BigInt implements Comparable<BigInt> {
     // as BigInt
     final result = a._euclidianDivision(b);
     if (result.remainder == _0 || isPositive) {
-      if (isPositive != other.isPositive) return -result.quotien;
-      return result.quotien;
+      if (isPositive != other.isPositive) return -result.quotient;
+      return result.quotient;
     }
-    if (other.isPositive) return -result.quotien;
-    else return result.quotien;
+    if (other.isPositive) return -result.quotient;
+    else return result.quotient;
   }
 
   BigInt operator %(BigInt other) {
     if (is0) return _0;
     if (other.is2) return value.first % 2 == 0 ? _0 : _1;
-    if (other.is5) return new BigInt.fromJsInt((isPositive ? value.first : -value.first) % 5);
+    if (other.is5) {
+      return new BigInt.fromJsInt(
+          (isPositive ? value.first : -value.first) % 5);
+    }
 
     final a = abs();
     final b = other.abs();
@@ -243,7 +267,8 @@ class BigInt implements Comparable<BigInt> {
     if (isValidJsInt && divisor.isValidJsInt) {
       final a = toValidJsInt();
       final b = divisor.toValidJsInt();
-      return new _EuclidianDivisionResult(new BigInt.fromJsInt(a ~/ b), new BigInt.fromJsInt(a % b));
+      return new _EuclidianDivisionResult(
+          new BigInt.fromJsInt(a ~/ b), new BigInt.fromJsInt(a % b));
     }
 
     // optimization :
@@ -265,7 +290,7 @@ class BigInt implements Comparable<BigInt> {
     });
 
     BigInt remainder = this;
-    BigInt quotien = _0;
+    BigInt quotient = _0;
     do {
       int log = 0;
       BigInt c = divisor;
@@ -279,10 +304,10 @@ class BigInt implements Comparable<BigInt> {
       }
       while (c <= remainder) {
         remainder -= c;
-        quotien += inc;
+        quotient += inc;
       }
     } while (divisor <= remainder);
-    return new _EuclidianDivisionResult(quotien, remainder);
+    return new _EuclidianDivisionResult(quotient, remainder);
   }
 
   BigInt abs() => new BigInt(value, true);
@@ -310,14 +335,17 @@ class BigInt implements Comparable<BigInt> {
 
   bool operator ==(BigInt other) => this.compareTo(other) == 0;
 
-  int get hashCode => value.fold(0, (t,e) => t + e.hashCode) * 31 + isPositive.hashCode;
+  int get hashCode =>
+      value.fold(0, (t, e) => t + e.hashCode) * 31 + isPositive.hashCode;
 
   String toString() {
     if (is0) return '0';
     final result = new StringBuffer();
     if (isNegative) result.write('-');
     result.write(value.last);
-    value.reversed.skip(1).forEach((e) => result.write((_BASE + e).toString().substring(1)));
+    value.reversed
+        .skip(1)
+        .forEach((e) => result.write((_BASE + e).toString().substring(1)));
     return result.toString();
   }
 }
