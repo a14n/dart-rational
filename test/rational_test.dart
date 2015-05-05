@@ -44,13 +44,23 @@ main() {
     expect(p('1') != (p('2')), equals(true));
   });
   test('toDecimalString()', () {
-    ['0', '1', '-1', '-1.1', '23', '31878018903828899277492024491376690701584023926880.1'].forEach((String n) {
+    [
+      '0',
+      '1',
+      '-1',
+      '-1.1',
+      '23',
+      '31878018903828899277492024491376690701584023926880.1'
+    ].forEach((String n) {
       expect(p(n).toDecimalString(), equals(n));
     });
     expect(p('9.9').toDecimalString(), equals('9.9'));
     expect(p('99.2').toDecimalString(), equals('99.2'));
-    expect((p('1')/p('3')).toDecimalString(), equals('0.3333333333'));
-    expect((p('1.0000000000000000000000000000000000000000000000001') * p('1.0000000000000000000000000000000000000000000000001')).toDecimalString(), equals('1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
+    expect((p('1') / p('3')).toDecimalString(), equals('0.3333333333'));
+    expect((p('1.0000000000000000000000000000000000000000000000001') *
+            p('1.0000000000000000000000000000000000000000000000001'))
+        .toDecimalString(), equals(
+            '1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
   });
   test('compareTo(Rational other)', () {
     expect(p('1').compareTo(p('1')), equals(0));
@@ -62,20 +72,28 @@ main() {
     expect((p('1') + p('1')).toDecimalString(), equals('2'));
     expect((p('1.1') + p('1')).toDecimalString(), equals('2.1'));
     expect((p('1.1') + p('0.9')).toDecimalString(), equals('2'));
-    expect((p('31878018903828899277492024491376690701584023926880.0') + p('0.9')).toDecimalString(), equals('31878018903828899277492024491376690701584023926880.9'));
+    expect(
+        (p('31878018903828899277492024491376690701584023926880.0') + p('0.9'))
+            .toDecimalString(),
+        equals('31878018903828899277492024491376690701584023926880.9'));
   });
   test('operator -(Rational other)', () {
     expect((p('1') - p('1')).toDecimalString(), equals('0'));
     expect((p('1.1') - p('1')).toDecimalString(), equals('0.1'));
     expect((p('0.1') - p('1.1')).toDecimalString(), equals('-1'));
-    expect((p('31878018903828899277492024491376690701584023926880.0') - p('0.9')).toDecimalString(), equals('31878018903828899277492024491376690701584023926879.1'));
+    expect(
+        (p('31878018903828899277492024491376690701584023926880.0') - p('0.9'))
+            .toDecimalString(),
+        equals('31878018903828899277492024491376690701584023926879.1'));
   });
   test('operator *(Rational other)', () {
     expect((p('1') * p('1')).toDecimalString(), equals('1'));
     expect((p('1.1') * p('1')).toDecimalString(), equals('1.1'));
     expect((p('1.1') * p('0.1')).toDecimalString(), equals('0.11'));
     expect((p('1.1') * p('0')).toDecimalString(), equals('0'));
-    expect((p('31878018903828899277492024491376690701584023926880.0') * p('10')).toDecimalString(), equals('318780189038288992774920244913766907015840239268800'));
+    expect((p('31878018903828899277492024491376690701584023926880.0') * p('10'))
+            .toDecimalString(),
+        equals('318780189038288992774920244913766907015840239268800'));
   });
   test('operator %(Rational other)', () {
     expect((p('2') % p('1')).toDecimalString(), equals('0'));
@@ -90,7 +108,9 @@ main() {
     expect((p('1.1') / p('1')).toDecimalString(), equals('1.1'));
     expect((p('1.1') / p('0.1')).toDecimalString(), equals('11'));
     expect((p('0') / p('0.2315')).toDecimalString(), equals('0'));
-    expect((p('31878018903828899277492024491376690701584023926880.0') / p('10')).toDecimalString(), equals('3187801890382889927749202449137669070158402392688'));
+    expect((p('31878018903828899277492024491376690701584023926880.0') / p('10'))
+            .toDecimalString(),
+        equals('3187801890382889927749202449137669070158402392688'));
   });
   test('operator ~/(Rational other)', () {
     expect(() => p('1') ~/ p('0'), throws);
@@ -179,8 +199,10 @@ main() {
   });
   test('clamp(Rational lowerLimit, Rational upperLimit)', () {
     expect((p('2.51').clamp(p('1'), p('3'))).toDecimalString(), equals('2.51'));
-    expect((p('2.51').clamp(p('2.6'), p('3'))).toDecimalString(), equals('2.6'));
-    expect((p('2.51').clamp(p('1'), p('2.5'))).toDecimalString(), equals('2.5'));
+    expect(
+        (p('2.51').clamp(p('2.6'), p('3'))).toDecimalString(), equals('2.6'));
+    expect(
+        (p('2.51').clamp(p('1'), p('2.5'))).toDecimalString(), equals('2.5'));
   });
   test('toInt()', () {
     expect(p('2.51').toInt(), equals(2));
@@ -195,29 +217,38 @@ main() {
   test('toStringAsFixed(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [0, 1, 5, 10].forEach((precision) {
-        expect(p(n.toString()).toStringAsFixed(precision), equals(n.toStringAsFixed(precision)));
+        expect(p(n.toString()).toStringAsFixed(precision),
+            equals(n.toStringAsFixed(precision)));
       });
     });
   });
   test('toStringAsExponential(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [1, 5, 10].forEach((precision) {
-        expect(p(n.toString()).toStringAsExponential(precision), equals(n.toStringAsExponential(precision)));
+        expect(p(n.toString()).toStringAsExponential(precision),
+            equals(n.toStringAsExponential(precision)));
       });
     });
   });
   test('toStringAsPrecision(int precision)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [1, 5, 10].forEach((precision) {
-        expect(p(n.toString()).toStringAsPrecision(precision), equals(n.toStringAsPrecision(precision)));
+        expect(p(n.toString()).toStringAsPrecision(precision),
+            equals(n.toStringAsPrecision(precision)));
       });
     });
   });
   test('hasFinitePrecision', () {
-    [p('100'), p('100.100'), p('1')/p('5'), (p('1')/p('3'))*p('3'), p('0.00000000000000000000001')].forEach((Rational r) {
+    [
+      p('100'),
+      p('100.100'),
+      p('1') / p('5'),
+      (p('1') / p('3')) * p('3'),
+      p('0.00000000000000000000001')
+    ].forEach((Rational r) {
       expect(r.hasFinitePrecision, isTrue);
     });
-    [p('1')/p('3')].forEach((Rational r) {
+    [p('1') / p('3')].forEach((Rational r) {
       expect(r.hasFinitePrecision, isFalse);
     });
   });
@@ -231,7 +262,7 @@ main() {
     expect(p('100.0000001').precision, equals(10));
     expect(p('-100.0000001').precision, equals(10));
     expect(p('100.000000000000000000000000000001').precision, equals(33));
-    expect(() => (p('1')/p('3')).precision, throws);
+    expect(() => (p('1') / p('3')).precision, throws);
   });
   test('scale', () {
     expect(p('100').scale, equals(0));
@@ -241,6 +272,6 @@ main() {
     expect(p('100.0000001').scale, equals(7));
     expect(p('-100.0000001').scale, equals(7));
     expect(p('100.000000000000000000000000000001').scale, equals(30));
-    expect(() => (p('1')/p('3')).scale, throws);
+    expect(() => (p('1') / p('3')).scale, throws);
   });
 }
