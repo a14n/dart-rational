@@ -47,7 +47,7 @@ class BigInt implements Comparable<BigInt> {
     if (!new RegExp(r'^[0-9]+$').hasMatch(text)) {
       throw new FormatException('Invalid integer');
     }
-    final value = [];
+    final value = <int>[];
     while (text.isNotEmpty) {
       final divider = text.length > _LOG_BASE ? text.length - _LOG_BASE : 0;
       value.add(int.parse(text.substring(divider)));
@@ -72,7 +72,7 @@ class BigInt implements Comparable<BigInt> {
     int a = intValue.abs();
     final isPositive = intValue >= 0;
     if (a < _BASE) return new BigInt([a], isPositive);
-    final value = [];
+    final value = <int>[];
     while (a > 0) {
       value.add(a % _BASE);
       a = a ~/ _BASE;
@@ -128,7 +128,7 @@ class BigInt implements Comparable<BigInt> {
     final a = value;
     final b = other.value;
     final maxLength = max(a.length, b.length);
-    final result = [];
+    final result = <int>[];
     int carry = 0;
     for (int i = 0; i < maxLength; i++) {
       int sum = _getOr0(a, i) + _getOr0(b, i) + carry;
@@ -158,7 +158,7 @@ class BigInt implements Comparable<BigInt> {
     final a = value;
     final b = other.value;
     final maxLength = max(a.length, b.length);
-    final result = [];
+    final result = <int>[];
     int borrow = 0;
     for (int i = 0; i < maxLength; i++) {
       int aa = _getOr0(a, i) - borrow;
@@ -200,7 +200,7 @@ class BigInt implements Comparable<BigInt> {
     final b = value;
     BigInt result = _0;
     for (int i = 0; i < a.length; i++) {
-      final partResult = [];
+      final partResult = <int>[];
       int carry = 0;
       for (int j = 0; j < b.length; j++) {
         int sum = a[i] * b[j] + carry;
