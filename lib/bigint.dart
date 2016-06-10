@@ -103,10 +103,11 @@ class BigInt implements Comparable<BigInt> {
   }
 
   double toDouble() {
-    double result = 1.0;
+    double result = 0.0;
     for (int i = 0; i < value.length; i++) {
       result += value[i] * pow(_BASE, i);
     }
+    if (isNegative) result = -1.0 * result;
     return result;
   }
 
