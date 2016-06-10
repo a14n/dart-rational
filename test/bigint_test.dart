@@ -31,6 +31,16 @@ main() {
       expect(p('-0$n').toString(), equals('-$n'));
     }
   });
+  test('toDouble()', () {
+    [ '0', '1', '-1', '2', '-2', '23', '-23', '-0',
+      '3187801890382', '-3187801890382',
+    ].forEach((n) =>
+        expect(p(n).toDouble().toString().replaceAll(".0", ""), n));
+    expect(p('31878018903828899277492024491376690701584023926880').toDouble().toString(),
+        allOf([startsWith('3.187801890382'), endsWith('e+49')]));
+    expect(p('-31878018903828899277492024491376690701584023926880').toDouble().toString(),
+        allOf([startsWith('-3.187801890382'), endsWith('e+49')]));
+  });
   test('operator ==(BigInt other)', () {
     expect(p('1') == p('1'), equals(true));
     expect(p('1') == p('2'), equals(false));
