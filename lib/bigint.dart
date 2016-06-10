@@ -64,7 +64,8 @@ class BigInt implements Comparable<BigInt> {
     for (int i = value.length - 1; i >= 0; i--) {
       if (value[i] == 0) {
         value.removeLast();
-      } else break;
+      } else
+        break;
     }
   }
 
@@ -181,13 +182,15 @@ class BigInt implements Comparable<BigInt> {
       final zeros = value.takeWhile((e) => e == 0).toList();
       return new BigInt(
           (new BigInt(value.skip(zeros.length).toList(), true) * other).value
-        ..insertAll(0, zeros), true);
+            ..insertAll(0, zeros),
+          true);
     }
     if (other.value[0] == 0) {
       final zeros = other.value.takeWhile((e) => e == 0).toList();
-      return new BigInt((this *
-          new BigInt(other.value.skip(zeros.length).toList(), true)).value
-        ..insertAll(0, zeros), true);
+      return new BigInt(
+          (this * new BigInt(other.value.skip(zeros.length).toList(), true))
+              .value..insertAll(0, zeros),
+          true);
     }
 
     // if they are small enough add them as int
@@ -232,8 +235,10 @@ class BigInt implements Comparable<BigInt> {
       if (isPositive != other.isPositive) return -result.quotient;
       return result.quotient;
     }
-    if (other.isPositive) return -result.quotient;
-    else return result.quotient;
+    if (other.isPositive)
+      return -result.quotient;
+    else
+      return result.quotient;
   }
 
   BigInt operator %(BigInt other) {
@@ -255,8 +260,10 @@ class BigInt implements Comparable<BigInt> {
     // as BigInt
     final result = a._euclidianDivision(b);
     if (result.remainder == _0) return _0;
-    if (isPositive) return result.remainder;
-    else return other.abs() - result.remainder;
+    if (isPositive)
+      return result.remainder;
+    else
+      return other.abs() - result.remainder;
   }
 
   _EuclidianDivisionResult _euclidianDivision(BigInt divisor) {
@@ -279,15 +286,18 @@ class BigInt implements Comparable<BigInt> {
       0: divisor, // divisor * 10^0
     };
     var f = (int log, Map<int, BigInt> m) => m.putIfAbsent(log, () {
-      if (log < _LOG_BASE) return m[log - 1] * _10;
-      else {
-        final index = log % _LOG_BASE;
-        final pad = log ~/ _LOG_BASE;
-        final a = m[index];
-        return new BigInt(new List<int>.generate(pad + a.value.length,
-            (index) => index < pad ? 0 : a.value[index - pad]), true);
-      }
-    });
+          if (log < _LOG_BASE)
+            return m[log - 1] * _10;
+          else {
+            final index = log % _LOG_BASE;
+            final pad = log ~/ _LOG_BASE;
+            final a = m[index];
+            return new BigInt(
+                new List<int>.generate(pad + a.value.length,
+                    (index) => index < pad ? 0 : a.value[index - pad]),
+                true);
+          }
+        });
 
     BigInt remainder = this;
     BigInt quotient = _0;

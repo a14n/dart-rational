@@ -115,14 +115,17 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
 
   int get hashCode => (_numerator + _INT_31 * _denominator).hashCode;
 
-  bool operator ==(Object other) => other is Rational &&
+  bool operator ==(Object other) =>
+      other is Rational &&
       _numerator == other._numerator &&
       _denominator == other._denominator;
 
   String toString() {
     if (_numerator == _INT_0) return '0';
-    if (isInteger) return '$_numerator';
-    else return '$_numerator/$_denominator';
+    if (isInteger)
+      return '$_numerator';
+    else
+      return '$_numerator/$_denominator';
   }
 
   String toDecimalString() {
@@ -360,9 +363,9 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
       final lessThanOne = abs() < _1;
       final tmp = (lessThanOne ? (abs() + _1) : abs()) * mulRat;
       final tmpRound = tmp.round();
-      final intPart = (lessThanOne
-          ? ((tmpRound ~/ mulRat) - _1)
-          : (tmpRound ~/ mulRat))._toInt();
+      final intPart =
+          (lessThanOne ? ((tmpRound ~/ mulRat) - _1) : (tmpRound ~/ mulRat))
+              ._toInt();
       final decimalPart =
           tmpRound._toInt().toString().substring(intPart.toString().length);
       return '${isNegative ? '-' : ''}${intPart}.${decimalPart}';
