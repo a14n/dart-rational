@@ -3,7 +3,7 @@ library test.bigint;
 import 'package:test/test.dart';
 import 'package:rational/bigint.dart';
 
-p(String value) => BigInt.parse(value);
+BigInt p(String value) => BigInt.parse(value);
 
 main() {
   test('string validation', () {
@@ -32,14 +32,19 @@ main() {
     }
   });
   test('toDouble()', () {
-    [ '0', '1', '-1', '2', '-2', '23', '-23', '-0',
-      '3187801890382', '-3187801890382',
-    ].forEach((n) =>
-        expect(p(n).toDouble().toString().replaceAll(".0", ""), n));
-    expect(p('31878018903828899277492024491376690701584023926880').toDouble().toString(),
-        allOf([startsWith('3.187801890382'), endsWith('e+49')]));
-    expect(p('-31878018903828899277492024491376690701584023926880').toDouble().toString(),
-        allOf([startsWith('-3.187801890382'), endsWith('e+49')]));
+    [
+      '0',
+      '1',
+      '2',
+      '23',
+      '3187801890382',
+    ]
+        .expand((e) => [e, '-$e']) // also test negative values
+        .forEach((n) => expect(p(n).toDouble(), equals(double.parse(n))));
+    ['31878018903828899277492024491376690701584023926880',]
+        .expand((e) => [e, '-$e']) // also test negative values
+        .forEach((n) => expect(p(n).toDouble().toStringAsExponential(10),
+            equals(double.parse(n).toStringAsExponential(10))));
   });
   test('operator ==(BigInt other)', () {
     expect(p('1') == p('1'), equals(true));

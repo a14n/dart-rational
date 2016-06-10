@@ -107,8 +107,7 @@ class BigInt implements Comparable<BigInt> {
     for (int i = 0; i < value.length; i++) {
       result += value[i] * pow(_BASE, i);
     }
-    if (isNegative) result = -1.0 * result;
-    return result;
+    return isNegative ? -result : result;
   }
 
   BigInt operator -() => new BigInt(value, isNegative);
