@@ -1,11 +1,15 @@
 
+# v0.1.9 (2016-06-10)
+
+- fix a [bug on `BigInt.toDouble`](https://github.com/a14n/dart-rational/issues/14).
+
 # v0.1.8+1 (2014-10-29)
 
 - fix a bug for `Rational.precision` on negative number.
 
 # v0.1.8 (2014-10-29)
 
-- fix bugs with dart2js 
+- fix bugs with dart2js
 - add `Rational.signum`
 - add `Rational.hasFinitePrecision`
 - add `Rational.precision`

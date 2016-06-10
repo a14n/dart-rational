@@ -11,7 +11,7 @@ To use this library in your code :
 
 ```yaml
 dependencies:
-  rational: ^0.1.8
+  rational: ^0.1.9
 ```
 
 ### Rational numbers
