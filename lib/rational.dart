@@ -286,7 +286,7 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
    */
   int toInt();
 
-  T _toInt() => _numerator ~/ _denominator;
+  T _toInt() => _numerator ~/ _denominator as T;
 
   /**
    * Return this [num] as a [double].
@@ -303,8 +303,8 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
   bool get hasFinitePrecision {
     // the denominator should only be a product of powers of 2 and 5
     var den = _denominator;
-    while (den % _INT_5 == _INT_0) den = den ~/ _INT_5;
-    while (den % _INT_2 == _INT_0) den = den ~/ _INT_2;
+    while (den % _INT_5 == _INT_0) den = den ~/ _INT_5 as T;
+    while (den % _INT_2 == _INT_0) den = den ~/ _INT_2 as T;
     return den == _INT_1;
   }
 
@@ -323,7 +323,7 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
     }
     var x = _numerator;
     while (x % _denominator != _INT_0) x *= _INT_10;
-    x = x ~/ _denominator;
+    x = x ~/ _denominator as T;
     return x.abs().toString().length;
   }
 

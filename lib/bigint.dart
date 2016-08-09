@@ -14,7 +14,7 @@
 
 library bigint;
 
-import 'dart:math' show max, min, pow;
+import 'dart:math' show max, pow;
 
 final MAX_JS_INT = 9007199254740992;
 final MAX_JS_INT_AS_BIG_INT = new BigInt.fromJsInt(MAX_JS_INT);
@@ -343,7 +343,7 @@ class BigInt implements Comparable<BigInt> {
 
   bool operator >=(BigInt other) => this.compareTo(other) >= 0;
 
-  bool operator ==(BigInt other) => this.compareTo(other) == 0;
+  bool operator ==(other) => other is BigInt && this.compareTo(other) == 0;
 
   int get hashCode =>
       value.fold(0, (t, e) => t + e.hashCode) * 31 + isPositive.hashCode;
