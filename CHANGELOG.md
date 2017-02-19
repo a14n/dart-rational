@@ -1,4 +1,8 @@
 
+# v0.1.10 (2016-06-10)
+
+- fix a [bug on `operator %` with negative values](https://github.com/a14n/dart-rational/issues/16).
+
 # v0.1.9 (2016-06-10)
 
 - fix a [bug on `BigInt.toDouble`](https://github.com/a14n/dart-rational/issues/14).
