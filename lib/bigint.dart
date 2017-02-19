@@ -111,7 +111,7 @@ class BigInt implements Comparable<BigInt> {
     return isNegative ? -result : result;
   }
 
-  BigInt operator -() => new BigInt(value, isNegative);
+  BigInt operator -() => is0 ? this : new BigInt(value, isNegative);
 
   BigInt operator +(BigInt other) {
     if (isPositive && other.isNegative) return this - (-other);

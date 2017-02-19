@@ -163,7 +163,8 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
   /** Euclidean modulo operator. */
   Rational operator %(Rational other) {
     final remainder = this.remainder(other);
-    return remainder == _0 ? _0 : (remainder + (isNegative ? other.abs() : _0));
+    if (remainder == _0) return _0;
+    return remainder + (isNegative ? other.abs() : _0);
   }
 
   /** Division operator. */
