@@ -1,7 +1,11 @@
 
-# v0.1.10 (2016-06-10)
+# v0.1.10+1 (2017-02-19)
 
-- fix a [bug on `operator %` with negative values](https://github.com/a14n/dart-rational/issues/16).
+- fix [bug on `operator %` with negative values](https://github.com/a14n/dart-rational/issues/16) on browser.
+
+# v0.1.10 (2017-02-19)
+
+- fix [bug on `operator %` with negative values](https://github.com/a14n/dart-rational/issues/16).
 
 # v0.1.9 (2016-06-10)
 
