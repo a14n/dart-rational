@@ -161,8 +161,10 @@ abstract class Rational<T extends dynamic /*int|BigInt*/ >
       _numerator * other._numerator, _denominator * other._denominator);
 
   /** Euclidean modulo operator. */
-  Rational operator %(Rational other) =>
-      this.remainder(other) + (isNegative ? other.abs() : _0);
+  Rational operator %(Rational other) {
+    final remainder = this.remainder(other);
+    return remainder == _0 ? _0 : (remainder + (isNegative ? other.abs() : _0));
+  }
 
   /** Division operator. */
   Rational operator /(Rational other) => new Rational._normalize(

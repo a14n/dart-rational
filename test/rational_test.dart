@@ -104,6 +104,10 @@ main() {
     expect((p('8.9') % p('1.1')).toDecimalString(), equals('0.1'));
     expect((p('-1.2') % p('0.5')).toDecimalString(), equals('0.3'));
     expect((p('-1.2') % p('-0.5')).toDecimalString(), equals('0.3'));
+    expect((p('-4') % p('4')).toDecimalString(), equals('0'));
+    expect((p('-4') % p('-4')).toDecimalString(), equals('0'));
+    expect((p('-8') % p('4')).toDecimalString(), equals('0'));
+    expect((p('-8') % p('-4')).toDecimalString(), equals('0'));
   });
   test('operator /(Rational other)', () {
     expect(() => p('1') / p('0'), throws);
@@ -133,6 +137,8 @@ main() {
     expect((p('8.9').remainder(p('1.1'))).toDecimalString(), equals('0.1'));
     expect((p('-1.2').remainder(p('0.5'))).toDecimalString(), equals('-0.2'));
     expect((p('-1.2').remainder(p('-0.5'))).toDecimalString(), equals('-0.2'));
+    expect((p('-4').remainder(p('4'))).toDecimalString(), equals('0'));
+    expect((p('-4').remainder(p('-4'))).toDecimalString(), equals('0'));
   });
   test('operator <(Rational other)', () {
     expect(p('1') < p('1'), equals(false));
