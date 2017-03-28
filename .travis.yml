@@ -1,6 +1,12 @@
 language: dart
+sudo: false
 dart:
   - stable
   - dev
-sudo: false
-with_content_shell: true
+dart_task:
+- dartfmt
+- dartanalyzer: --fatal-warnings lib
+- test: --platform vm
+- test: --platform firefox
+- test: --platform dartium
+  install_dartium: true
