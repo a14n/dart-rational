@@ -1,7 +1,7 @@
 library test.bigint;
 
-import 'package:test/test.dart';
 import 'package:rational/bigint.dart';
+import 'package:test/test.dart';
 
 BigInt p(String value) => BigInt.parse(value);
 
@@ -32,10 +32,10 @@ main() {
     }
   });
   test('toDouble()', () {
-    ['0', '1', '2', '23', '3187801890382',]
+    ['0', '1', '2', '23', '3187801890382']
         .expand((e) => [e, '-$e']) // also test negative values
         .forEach((n) => expect(p(n).toDouble(), equals(double.parse(n))));
-    ['31878018903828899277492024491376690701584023926880',]
+    ['31878018903828899277492024491376690701584023926880']
         .expand((e) => [e, '-$e']) // also test negative values
         .forEach((n) => expect(p(n).toDouble().toStringAsExponential(10),
             equals(double.parse(n).toStringAsExponential(10))));
