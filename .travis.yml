@@ -10,3 +10,8 @@ dart_task:
 - test: --platform firefox
 - test: --platform dartium
   install_dartium: true
+matrix:
+  allow_failures:
+  - dart: dev
+    dart_task:
+      dartfmt
