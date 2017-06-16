@@ -20,12 +20,12 @@ final IS_JS = identical(1, 1.0);
 
 final _PATTERN = new RegExp(r"^([+-]?\d+)(\.\d+)?([eE][+-]?\d+)?$");
 
-final _0 = new Rational(0);
-final _1 = new Rational(1);
-final _5 = new Rational(5);
-final _10 = new Rational(10);
+final _0 = new Rational<dynamic>(0);
+final _1 = new Rational<dynamic>(1);
+final _5 = new Rational<dynamic>(5);
+final _10 = new Rational<dynamic>(10);
 
-_int(int value) => IS_JS ? new BigInt.fromJsInt(value) : value;
+dynamic _int(int value) => IS_JS ? new BigInt.fromJsInt(value) : value;
 final _INT_0 = _int(0);
 final _INT_1 = _int(1);
 final _INT_2 = _int(2);
@@ -33,9 +33,9 @@ final _INT_5 = _int(5);
 final _INT_10 = _int(10);
 final _INT_31 = _int(31);
 
-_parseInt(String text) => IS_JS ? BigInt.parse(text) : int.parse(text);
+dynamic _parseInt(String text) => IS_JS ? BigInt.parse(text) : int.parse(text);
 
-_gcd(a, b) {
+dynamic _gcd(dynamic a, dynamic b) {
   while (b != _INT_0) {
     var t = b;
     b = a % t;
