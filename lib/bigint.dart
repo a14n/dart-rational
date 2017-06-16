@@ -189,7 +189,8 @@ class BigInt implements Comparable<BigInt> {
       final zeros = other.value.takeWhile((e) => e == 0).toList();
       return new BigInt(
           (this * new BigInt(other.value.skip(zeros.length).toList(), true))
-              .value..insertAll(0, zeros),
+              .value
+            ..insertAll(0, zeros),
           true);
     }
 
