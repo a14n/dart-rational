@@ -1,4 +1,8 @@
 
+# v0.1.11 (2017-06-16)
+
+- add types.
+
 # v0.1.10+1 (2017-02-19)
 
 - fix [bug on `operator %` with negative values](https://github.com/a14n/dart-rational/issues/16) on browser.
