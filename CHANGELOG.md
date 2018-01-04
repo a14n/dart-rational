@@ -1,3 +1,8 @@
+# 0.2.0
+
+- move to Dart SDK 2.0
+- remove `BigInt` class
+- use `BigInt` provided by `dart:core`
 
 # v0.1.11 (2017-06-16)
 

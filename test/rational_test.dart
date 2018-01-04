@@ -3,14 +3,14 @@ library test.rational;
 import 'package:test/test.dart';
 import 'package:rational/rational.dart';
 
-p(String value) => Rational.parse(value);
+Rational p(String value) => Rational.parse(value);
 
 main() {
   test('string validation', () {
     expect(() => p('1'), returnsNormally);
     expect(() => p('-1'), returnsNormally);
     expect(() => p('+1'), returnsNormally);
-    expect(() => p('1.'), throws);
+    expect(() => p('1.'), throwsFormatException);
     expect(() => p('1.0'), returnsNormally);
     expect(() => p('1.0e5'), returnsNormally);
     expect(() => p('1.0e-5'), returnsNormally);
@@ -110,7 +110,7 @@ main() {
     expect((p('-8') % p('-4')).toDecimalString(), equals('0'));
   });
   test('operator /(Rational other)', () {
-    expect(() => p('1') / p('0'), throws);
+    expect(() => p('1') / p('0'), throwsArgumentError);
     expect((p('1') / p('1')).toDecimalString(), equals('1'));
     expect((p('1.1') / p('1')).toDecimalString(), equals('1.1'));
     expect((p('1.1') / p('0.1')).toDecimalString(), equals('11'));
@@ -121,7 +121,7 @@ main() {
         equals('3187801890382889927749202449137669070158402392688'));
   });
   test('operator ~/(Rational other)', () {
-    expect(() => p('1') ~/ p('0'), throws);
+    expect(() => p('1') ~/ p('0'), throwsArgumentError);
     expect((p('3') ~/ p('2')).toDecimalString(), equals('1'));
     expect((p('1.1') ~/ p('1')).toDecimalString(), equals('1'));
     expect((p('1.1') ~/ p('0.1')).toDecimalString(), equals('11'));
@@ -272,7 +272,7 @@ main() {
     expect(p('100.0000001').precision, equals(10));
     expect(p('-100.0000001').precision, equals(10));
     expect(p('100.000000000000000000000000000001').precision, equals(33));
-    expect(() => (p('1') / p('3')).precision, throws);
+    expect(() => (p('1') / p('3')).precision, throwsStateError);
   });
   test('scale', () {
     expect(p('100').scale, equals(0));
@@ -282,6 +282,6 @@ main() {
     expect(p('100.0000001').scale, equals(7));
     expect(p('-100.0000001').scale, equals(7));
     expect(p('100.000000000000000000000000000001').scale, equals(30));
-    expect(() => (p('1') / p('3')).scale, throws);
+    expect(() => (p('1') / p('3')).scale, throwsStateError);
   });
 }
