@@ -1,4 +1,4 @@
-# 0.2.0
+# 0.2.0 (2018-03-15)
 
 - move to Dart SDK 2.0
 - remove `BigInt` class
