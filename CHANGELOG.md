@@ -1,3 +1,8 @@
+# 0.3.0 (2018-07-10)
+
+- allow parsing of `1.`.
+- make `Rational.parse` a factory constructor.
+
 # 0.2.0 (2018-03-15)
 
 - move to Dart SDK 2.0
