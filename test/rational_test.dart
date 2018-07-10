@@ -10,7 +10,7 @@ void main() {
     expect(() => p('1'), returnsNormally);
     expect(() => p('-1'), returnsNormally);
     expect(() => p('+1'), returnsNormally);
-    expect(() => p('1.'), throwsFormatException);
+    expect(() => p('1.'), returnsNormally);
     expect(() => p('1.0'), returnsNormally);
     expect(() => p('1.0e5'), returnsNormally);
     expect(() => p('1.0e-5'), returnsNormally);
