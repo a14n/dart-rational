@@ -14,19 +14,19 @@
 
 library rational;
 
-final _pattern = new RegExp(r'^([+-]?\d+)(\.\d+)?([eE][+-]?\d+)?$');
+final _pattern = RegExp(r'^([+-]?\d+)(\.\d+)?([eE][+-]?\d+)?$');
 
-final _r0 = new Rational.fromInt(0);
-final _r1 = new Rational.fromInt(1);
-final _r5 = new Rational.fromInt(5);
-final _r10 = new Rational.fromInt(10);
+final _r0 = Rational.fromInt(0);
+final _r1 = Rational.fromInt(1);
+final _r5 = Rational.fromInt(5);
+final _r10 = Rational.fromInt(10);
 
-final _i0 = new BigInt.from(0);
-final _i1 = new BigInt.from(1);
-final _i2 = new BigInt.from(2);
-final _i5 = new BigInt.from(5);
-final _i10 = new BigInt.from(10);
-final _i31 = new BigInt.from(31);
+final _i0 = BigInt.from(0);
+final _i1 = BigInt.from(1);
+final _i2 = BigInt.from(2);
+final _i5 = BigInt.from(5);
+final _i10 = BigInt.from(10);
+final _i31 = BigInt.from(31);
 
 BigInt _gcd(BigInt a, BigInt b) {
   var q = a;
@@ -42,8 +42,8 @@ BigInt _gcd(BigInt a, BigInt b) {
 class Rational implements Comparable<Rational> {
   factory Rational(BigInt numerator, [BigInt denominator]) {
     denominator ??= _i1;
-    if (denominator == _i0) throw new ArgumentError();
-    if (numerator == _i0) return new Rational._normalized(_i0, _i1);
+    if (denominator == _i0) throw ArgumentError();
+    if (numerator == _i0) return Rational._normalized(_i0, _i1);
     if (denominator < _i0) {
       numerator = -numerator;
       denominator = -denominator;
@@ -52,17 +52,17 @@ class Rational implements Comparable<Rational> {
     final aDenominator = denominator.abs();
     final gcd = _gcd(aNumerator, aDenominator);
     return (gcd == _i1)
-        ? new Rational._normalized(numerator, denominator)
-        : new Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
+        ? Rational._normalized(numerator, denominator)
+        : Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
   }
 
   factory Rational.fromInt(int numerator, [int denominator = 1]) =>
-      new Rational(new BigInt.from(numerator), new BigInt.from(denominator));
+      Rational(BigInt.from(numerator), BigInt.from(denominator));
 
   factory Rational.parse(String decimalValue) {
     final match = _pattern.firstMatch(decimalValue);
     if (match == null) {
-      throw new FormatException('$decimalValue is not a valid format');
+      throw FormatException('$decimalValue is not a valid format');
     }
     final group1 = match.group(1);
     final group2 = match.group(2);
@@ -89,7 +89,7 @@ class Rational implements Comparable<Rational> {
         exponent += _i1;
       }
     }
-    return new Rational(numerator, denominator);
+    return Rational(numerator, denominator);
   }
 
   Rational._normalized(this.numerator, this.denominator)
@@ -139,16 +139,16 @@ class Rational implements Comparable<Rational> {
 
   // implementation of num
 
-  Rational operator +(Rational other) => new Rational(
+  Rational operator +(Rational other) => Rational(
       numerator * other.denominator + other.numerator * denominator,
       denominator * other.denominator);
 
-  Rational operator -(Rational other) => new Rational(
+  Rational operator -(Rational other) => Rational(
       numerator * other.denominator - other.numerator * denominator,
       denominator * other.denominator);
 
-  Rational operator *(Rational other) => new Rational(
-      numerator * other.numerator, denominator * other.denominator);
+  Rational operator *(Rational other) =>
+      Rational(numerator * other.numerator, denominator * other.denominator);
 
   Rational operator %(Rational other) {
     final remainder = this.remainder(other);
@@ -156,8 +156,8 @@ class Rational implements Comparable<Rational> {
     return remainder + (isNegative ? other.abs() : _r0);
   }
 
-  Rational operator /(Rational other) => new Rational(
-      numerator * other.denominator, denominator * other.numerator);
+  Rational operator /(Rational other) =>
+      Rational(numerator * other.denominator, denominator * other.numerator);
 
   /// Truncating division operator.
   ///
@@ -165,7 +165,7 @@ class Rational implements Comparable<Rational> {
   /// [:(a / b).truncate():].
   Rational operator ~/(Rational other) => (this / other).truncate();
 
-  Rational operator -() => new Rational._normalized(-numerator, denominator);
+  Rational operator -() => Rational._normalized(-numerator, denominator);
 
   /// Return the remainder from dividing this [num] by [other].
   Rational remainder(Rational other) => this - (this ~/ other) * other;
@@ -214,8 +214,7 @@ class Rational implements Comparable<Rational> {
 
   /// Returns the integer value obtained by discarding any fractional digits
   /// from this [num].
-  Rational truncate() =>
-      new Rational._normalized(numerator ~/ denominator, _i1);
+  Rational truncate() => Rational._normalized(numerator ~/ denominator, _i1);
 
   /// Returns the integer value closest to `this`.
   ///
@@ -280,7 +279,7 @@ class Rational implements Comparable<Rational> {
   /// [hasFinitePrecision] is `false`.
   int get precision {
     if (!hasFinitePrecision) {
-      throw new StateError('This number has an infinite precision: $this');
+      throw StateError('This number has an infinite precision: $this');
     }
     var x = numerator;
     while (x % denominator != _i0) x *= _i10;
@@ -298,7 +297,7 @@ class Rational implements Comparable<Rational> {
   /// [hasFinitePrecision] is `false`.
   int get scale {
     if (!hasFinitePrecision) {
-      throw new StateError('This number has an infinite precision: $this');
+      throw StateError('This number has an infinite precision: $this');
     }
     var i = 0;
     var x = numerator;
@@ -317,7 +316,7 @@ class Rational implements Comparable<Rational> {
     } else {
       var mul = _i1;
       for (var i = 0; i < fractionDigits; i++) mul *= _i10;
-      final mulRat = new Rational(mul);
+      final mulRat = Rational(mul);
       final lessThanOne = abs() < _r1;
       final tmp = (lessThanOne ? (abs() + _r1) : abs()) * mulRat;
       final tmpRound = tmp.round();
