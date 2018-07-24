@@ -10,7 +10,7 @@ To use this library in your code :
 
 ```yaml
 dependencies:
-  rational: ^0.2.0
+  rational: ^0.3.0
 ```
 
 ### Rational numbers
@@ -22,8 +22,7 @@ import 'package:rational/rational.dart';
 ```
 
 * Start computing using `Rational.parse('1.23')`,
-`new Rational(new BigInt.from(12), new BigInt.from(7))` or
-`new Rational.fromInt(12, 7)`.
+`Rational(BigInt.from(12), BigInt.from(7))` or `Rational.fromInt(12, 7)`.
 
 ## License
 Apache 2.0
