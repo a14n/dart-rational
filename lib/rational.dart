@@ -336,6 +336,27 @@ class Rational implements Comparable<Rational> {
 
   /// Converts a [num] to a string representation with [precision] significant
   /// digits.
-  String toStringAsPrecision(int precision) =>
-      toDouble().toStringAsPrecision(precision);
+  String toStringAsPrecision(int precision) {
+    assert(precision > 0);
+
+    if (this == _r0) {
+      return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
+    }
+
+    var limit = _r1;
+    for (var i = 0; i < precision; i++) limit *= _r10;
+
+    var shift = _r1;
+    var pad = 0;
+    while (abs() * shift < limit) {
+      pad++;
+      shift *= _r10;
+    }
+    while (abs() * shift >= limit) {
+      pad--;
+      shift /= _r10;
+    }
+    final value = (this * shift).round() / shift;
+    return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
+  }
 }

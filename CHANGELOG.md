@@ -1,3 +1,7 @@
+# 0.3.2 (2019-03-19)
+
+- fix [issue with `toStringAsPrecision`](https://github.com/a14n/dart-decimal/issues/19).
+
 # 0.3.1 (2018-07-24)
 
 - migration to Dart 2.
