@@ -235,18 +235,23 @@ void main() {
   test('toStringAsExponential(int fractionDigits)', () {
     for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
       for (final precision in [1, 5, 10]) {
-        expect(p(n.toString()).toStringAsExponential(precision),
-            equals(n.toStringAsExponential(precision)));
+        expect(
+          p(p(n.toString()).toStringAsExponential(precision)),
+          p(n.toStringAsExponential(precision)),
+        );
       }
     }
   });
   test('toStringAsPrecision(int precision)', () {
     for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
       for (final precision in [1, 5, 10]) {
-        expect(p(n.toString()).toStringAsPrecision(precision),
-            equals(n.toStringAsPrecision(precision)));
+        expect(
+          p(p(n.toString()).toStringAsPrecision(precision)),
+          p(n.toStringAsPrecision(precision)),
+        );
       }
     }
+    expect(p('0.512').toStringAsPrecision(20), '0.51200000000000000000');
   });
   test('hasFinitePrecision', () {
     for (final r in [
