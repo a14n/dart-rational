@@ -1,3 +1,7 @@
+# 0.3.3 (2019-04-08)
+
+- fix [issue with `signnum`](https://github.com/a14n/dart-decimal/issues/21).
+
 # 0.3.2 (2019-03-19)
 
 - fix [issue with `toStringAsPrecision`](https://github.com/a14n/dart-decimal/issues/19).
