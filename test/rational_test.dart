@@ -183,6 +183,8 @@ void main() {
     expect(p('-1.49').signum, equals(-1));
     expect(p('1.49').signum, equals(1));
     expect(p('0').signum, equals(0));
+    // https://github.com/a14n/dart-decimal/issues/21
+    expect(p('99999999999993.256').signum, equals(1));
   });
   test('floor()', () {
     expect((p('1').floor()).toDecimalString(), equals('1'));
