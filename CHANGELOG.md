@@ -1,3 +1,7 @@
+# 0.3.4 (2019-04-25)
+
+- [allow numbers starting with dot](https://github.com/a14n/dart-rational/issues/21).
+
 # 0.3.3 (2019-04-08)
 
 - fix [issue with `signnum`](https://github.com/a14n/dart-decimal/issues/21).

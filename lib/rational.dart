@@ -14,7 +14,7 @@
 
 library rational;
 
-final _pattern = RegExp(r'^([+-]?\d+)(\.\d*)?([eE][+-]?\d+)?$');
+final _pattern = RegExp(r'^([+-]?\d*)(\.\d*)?([eE][+-]?\d+)?$');
 
 final _r0 = Rational.fromInt(0);
 final _r1 = Rational.fromInt(1);

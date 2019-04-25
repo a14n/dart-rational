@@ -16,12 +16,14 @@ void main() {
     expect(() => p('1.0e-5'), returnsNormally);
     expect(() => p('1.0e+5'), returnsNormally);
     expect(() => p('1e+5'), returnsNormally);
+    expect(() => p('+'), throwsFormatException);
   });
   test('parse scientific notation', () {
     expect(p('1.0e3'), equals(p('1000')));
     expect(p('1e+3'), equals(p('1000')));
     expect(p('34.5e-2'), equals(p('0.345')));
     expect(p('345e-5'), equals(p('0.00345')));
+    expect(p('.123'), equals(p('0.123')));
   });
   test('get isInteger', () {
     expect(p('1').isInteger, equals(true));
