@@ -105,6 +105,8 @@ class Rational implements Comparable<Rational> {
 
   bool get isInteger => denominator == _i1;
 
+  Rational get inverse => Rational(denominator, numerator);
+
   @override
   int get hashCode => (numerator + _i31 * denominator).hashCode;
 

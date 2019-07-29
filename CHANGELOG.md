@@ -1,6 +1,7 @@
 # 0.3.5 (2019-07-29)
 
 - add `Rational.zero` and `Rational.one`.
+- add `Rational.inverse`.
 
 # 0.3.4 (2019-04-25)
 

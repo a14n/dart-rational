@@ -36,6 +36,12 @@ void main() {
     expect(p('1.0e4').isInteger, equals(true));
     expect(p('1e-4').isInteger, equals(false));
   });
+  test('get inverse', () {
+    expect(p('1').inverse, equals(p('1')));
+    expect(() => p('0').inverse, throwsArgumentError);
+    expect(p('10').inverse, equals(p('0.1')));
+    expect(p('200').inverse, equals(p('0.005')));
+  });
   test('operator ==(Rational other)', () {
     expect(p('1') == (p('1')), equals(true));
     expect(p('1') == (p('2')), equals(false));
