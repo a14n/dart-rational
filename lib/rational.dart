@@ -21,9 +21,9 @@ final _r1 = Rational.fromInt(1);
 final _r5 = Rational.fromInt(5);
 final _r10 = Rational.fromInt(10);
 
-final _i0 = BigInt.from(0);
-final _i1 = BigInt.from(1);
-final _i2 = BigInt.from(2);
+final _i0 = BigInt.zero;
+final _i1 = BigInt.one;
+final _i2 = BigInt.two;
 final _i5 = BigInt.from(5);
 final _i10 = BigInt.from(10);
 final _i31 = BigInt.from(31);
@@ -99,6 +99,9 @@ class Rational implements Comparable<Rational> {
         assert(_gcd(numerator.abs(), denominator) == _i1);
 
   final BigInt numerator, denominator;
+
+  static final zero = Rational.fromInt(0);
+  static final one = Rational.fromInt(1);
 
   bool get isInteger => denominator == _i1;
 

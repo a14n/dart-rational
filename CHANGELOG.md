@@ -1,3 +1,7 @@
+# 0.3.5 (2019-07-29)
+
+- add `Rational.zero` and `Rational.one`.
+
 # 0.3.4 (2019-04-25)
 
 - [allow numbers starting with dot](https://github.com/a14n/dart-rational/issues/21).
