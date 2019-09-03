@@ -299,4 +299,12 @@ void main() {
     expect(p('100.000000000000000000000000000001').scale, equals(30));
     expect(() => (p('1') / p('3')).scale, throwsStateError);
   });
+  test('pow', () {
+    expect(p('100').pow(0), equals(p('1')));
+    expect(p('100').pow(1), equals(p('100')));
+    expect(p('100').pow(2), equals(p('10000')));
+    expect(p('0.1').pow(0), equals(p('1')));
+    expect(p('0.1').pow(1), equals(p('0.1')));
+    expect(p('0.1').pow(2), equals(p('0.01')));
+  });
 }

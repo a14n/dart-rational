@@ -369,4 +369,12 @@ class Rational implements Comparable<Rational> {
     final value = (this * shift).round() / shift;
     return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
   }
+
+  /// Returns `this` to the power of [exponent].
+  ///
+  /// Returns [one] if the [exponent] equals `0`.
+  ///
+  /// The [exponent] must otherwise be positive.
+  Rational pow(int exponent) =>
+      Rational(numerator.pow(exponent), denominator.pow(exponent));
 }
