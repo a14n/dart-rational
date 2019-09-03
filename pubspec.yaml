@@ -1,5 +1,5 @@
 name: rational
-version: 0.3.5
+version: 0.3.6
 author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
 description: The rational package allows you to deal with rational numbers
 homepage: https://github.com/a14n/dart-rational

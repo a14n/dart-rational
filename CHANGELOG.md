@@ -1,3 +1,7 @@
+# 0.3.6 (2019-09-02)
+
+- add `Rational.pow`.
+
 # 0.3.5 (2019-07-29)
 
 - add `Rational.zero` and `Rational.one`.
