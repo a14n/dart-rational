@@ -306,5 +306,8 @@ void main() {
     expect(p('0.1').pow(0), equals(p('1')));
     expect(p('0.1').pow(1), equals(p('0.1')));
     expect(p('0.1').pow(2), equals(p('0.01')));
+    expect(p('-1').pow(0), equals(p('1')));
+    expect(p('-1').pow(1), equals(p('-1')));
+    expect(p('-1').pow(2), equals(p('1')));
   });
 }
