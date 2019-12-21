@@ -1,3 +1,7 @@
+# 0.3.7 (2019-09-02)
+
+- [Replace gcd implementation with dart:core's](https://github.com/a14n/dart-rational/pull/23).
+
 # 0.3.6 (2019-09-02)
 
 - add `Rational.pow`.

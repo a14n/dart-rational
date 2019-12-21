@@ -1,9 +1,8 @@
 name: rational
-version: 0.3.6
-author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
+version: 0.3.7
 description: The rational package allows you to deal with rational numbers
 homepage: https://github.com/a14n/dart-rational
 environment:
-  sdk: '>=2.0.0-dev.66.0 <3.0.0'
+  sdk: '>=2.0.0 <3.0.0'
 dev_dependencies:
-  test: ^1.2.0
+  test: ^1.9.4
