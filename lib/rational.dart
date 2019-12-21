@@ -28,17 +28,6 @@ final _i5 = BigInt.from(5);
 final _i10 = BigInt.from(10);
 final _i31 = BigInt.from(31);
 
-BigInt _gcd(BigInt a, BigInt b) {
-  var q = a;
-  var r = b;
-  while (r != _i0) {
-    final d = r;
-    r = q % d;
-    q = d;
-  }
-  return q;
-}
-
 class Rational implements Comparable<Rational> {
   factory Rational(BigInt numerator, [BigInt denominator]) {
     denominator ??= _i1;
@@ -50,7 +39,7 @@ class Rational implements Comparable<Rational> {
     }
     final aNumerator = numerator.abs();
     final aDenominator = denominator.abs();
-    final gcd = _gcd(aNumerator, aDenominator);
+    final gcd = aNumerator.gcd(aDenominator);
     return (gcd == _i1)
         ? Rational._normalized(numerator, denominator)
         : Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
@@ -96,7 +85,7 @@ class Rational implements Comparable<Rational> {
       : assert(numerator != null),
         assert(denominator != null),
         assert(denominator > _i0),
-        assert(_gcd(numerator.abs(), denominator) == _i1);
+        assert(numerator.abs().gcd(denominator) == _i1);
 
   final BigInt numerator, denominator;
 
