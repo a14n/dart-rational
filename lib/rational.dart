@@ -108,10 +108,11 @@ class Rational implements Comparable<Rational> {
   @override
   String toString() {
     if (numerator == _i0) return '0';
-    if (isInteger)
+    if (isInteger) {
       return '$numerator';
-    else
+    } else {
       return '$numerator/$denominator';
+    }
   }
 
   String toDecimalString() {
@@ -263,8 +264,12 @@ class Rational implements Comparable<Rational> {
   bool get hasFinitePrecision {
     // the denominator should only be a product of powers of 2 and 5
     var den = denominator;
-    while (den % _i5 == _i0) den = den ~/ _i5;
-    while (den % _i2 == _i0) den = den ~/ _i2;
+    while (den % _i5 == _i0) {
+      den = den ~/ _i5;
+    }
+    while (den % _i2 == _i0) {
+      den = den ~/ _i2;
+    }
     return den == _i1;
   }
 
@@ -281,7 +286,9 @@ class Rational implements Comparable<Rational> {
       throw StateError('This number has an infinite precision: $this');
     }
     var x = numerator;
-    while (x % denominator != _i0) x *= _i10;
+    while (x % denominator != _i0) {
+      x *= _i10;
+    }
     x = x ~/ denominator;
     return x.abs().toString().length;
   }
@@ -314,7 +321,9 @@ class Rational implements Comparable<Rational> {
       return round().toBigInt().toString();
     } else {
       var mul = _i1;
-      for (var i = 0; i < fractionDigits; i++) mul *= _i10;
+      for (var i = 0; i < fractionDigits; i++) {
+        mul *= _i10;
+      }
       final mulRat = Rational(mul);
       final lessThanOne = abs() < _r1;
       final tmp = (lessThanOne ? (abs() + _r1) : abs()) * mulRat;
@@ -343,7 +352,9 @@ class Rational implements Comparable<Rational> {
     }
 
     var limit = _r1;
-    for (var i = 0; i < precision; i++) limit *= _r10;
+    for (var i = 0; i < precision; i++) {
+      limit *= _r10;
+    }
 
     var shift = _r1;
     var pad = 0;
