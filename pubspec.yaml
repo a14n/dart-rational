@@ -1,6 +1,6 @@
 name: rational
-version: 0.3.7
-description: The rational package allows you to deal with rational numbers
+version: 0.3.8
+description: The rational package allows you to deal with rational numbers.
 homepage: https://github.com/a14n/dart-rational
 environment:
   sdk: '>=2.0.0 <3.0.0'
