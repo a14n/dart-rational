@@ -65,7 +65,7 @@ class Rational implements Comparable<Rational> {
       }
       numerator = BigInt.parse('$group1${group2.substring(1)}');
     } else {
-      numerator = BigInt.parse(group1 ?? '');
+      numerator = BigInt.parse(group1!);
     }
     if (group3 != null) {
       var exponent = BigInt.parse(group3.substring(1));
