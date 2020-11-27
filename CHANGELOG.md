@@ -1,3 +1,7 @@
+# 1.0.0-nullsafety (2020-11-27)
+
+- Migrate to nullsafety.
+
 # 0.3.8 (2020-01-30)
 
 - Improve pub score.
