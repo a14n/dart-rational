@@ -82,9 +82,7 @@ class Rational implements Comparable<Rational> {
   }
 
   Rational._normalized(this.numerator, this.denominator)
-      : assert(numerator != null),
-        assert(denominator != null),
-        assert(denominator > _i0),
+      : assert(denominator > _i0),
         assert(numerator.abs().gcd(denominator) == _i1);
 
   final BigInt numerator, denominator;
