@@ -29,7 +29,7 @@ final _i10 = BigInt.from(10);
 final _i31 = BigInt.from(31);
 
 class Rational implements Comparable<Rational> {
-  factory Rational(BigInt numerator, [BigInt denominator]) {
+  factory Rational(BigInt numerator, [BigInt? denominator]) {
     denominator ??= _i1;
     if (denominator == _i0) throw ArgumentError();
     if (numerator == _i0) return Rational._normalized(_i0, _i1);
@@ -65,7 +65,7 @@ class Rational implements Comparable<Rational> {
       }
       numerator = BigInt.parse('$group1${group2.substring(1)}');
     } else {
-      numerator = BigInt.parse(group1);
+      numerator = BigInt.parse(group1!);
     }
     if (group3 != null) {
       var exponent = BigInt.parse(group3.substring(1));
@@ -205,12 +205,18 @@ class Rational implements Comparable<Rational> {
   }
 
   /// Returns the greatest integer value no greater than this [num].
-  Rational floor() =>
-      isInteger ? truncate() : isNegative ? (truncate() - _r1) : truncate();
+  Rational floor() => isInteger
+      ? truncate()
+      : isNegative
+          ? (truncate() - _r1)
+          : truncate();
 
   /// Returns the least integer value that is no smaller than this [num].
-  Rational ceil() =>
-      isInteger ? truncate() : isNegative ? truncate() : (truncate() + _r1);
+  Rational ceil() => isInteger
+      ? truncate()
+      : isNegative
+          ? truncate()
+          : (truncate() + _r1);
 
   /// Returns the integer value obtained by discarding any fractional digits
   /// from this [num].
@@ -243,8 +249,11 @@ class Rational implements Comparable<Rational> {
   /// Clamps the rational to be in the range [lowerLimit]-[upperLimit]. The
   /// comparison is done using [compareTo] and therefore takes [:-0.0:] into
   /// account.
-  Rational clamp(Rational lowerLimit, Rational upperLimit) =>
-      this < lowerLimit ? lowerLimit : this > upperLimit ? upperLimit : this;
+  Rational clamp(Rational lowerLimit, Rational upperLimit) => this < lowerLimit
+      ? lowerLimit
+      : this > upperLimit
+          ? upperLimit
+          : this;
 
   /// Truncates this [num] to an integer and returns the result as an [int].
   int toInt() => toBigInt().toInt();
@@ -339,7 +348,7 @@ class Rational implements Comparable<Rational> {
 
   /// Converts a [num] to a string in decimal exponential notation with
   /// [fractionDigits] digits after the decimal point.
-  String toStringAsExponential([int fractionDigits]) =>
+  String toStringAsExponential([int? fractionDigits]) =>
       toDouble().toStringAsExponential(fractionDigits);
 
   /// Converts a [num] to a string representation with [precision] significant
