@@ -1,6 +1,6 @@
 # Dart Rational
 
-[![Build Status](https://travis-ci.org/a14n/dart-rational.svg?branch=master)](https://travis-ci.org/a14n/dart-rational)
+[![Build Status](https://github.com/a14n/dart-rational/actions/workflows/dart.yml/badge.svg)](https://github.com/a14n/dart-rational/actions/workflows/dart.yml)
 
 This project enable to make computations on rational numbers.
 
