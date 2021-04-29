@@ -382,6 +382,13 @@ class Rational implements Comparable<Rational> {
   /// Returns [one] if the [exponent] equals `0`.
   ///
   /// The [exponent] must otherwise be positive.
-  Rational pow(int exponent) =>
-      Rational(numerator.pow(exponent), denominator.pow(exponent));
+  Rational pow(int exponent) => exponent >= 0
+      ? Rational(
+          numerator.pow(exponent),
+          denominator.pow(exponent),
+        )
+      : Rational(
+          denominator.pow(exponent.abs()),
+          numerator.pow(exponent.abs()),
+        );
 }
