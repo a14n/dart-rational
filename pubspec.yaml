@@ -1,5 +1,5 @@
 name: rational
-version: 1.1.0
+version: 1.1.0+1
 description: The rational package allows you to deal with rational numbers.
 homepage: https://github.com/a14n/dart-rational
 environment:

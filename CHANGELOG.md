@@ -1,3 +1,7 @@
+# 1.1.0+1 (2021-04-29)
+
+- Fix the doc of `pow`.
+
 # 1.1.0 (2021-04-29)
 
 - Allow negative value as exponent of `pow`.
