@@ -380,8 +380,6 @@ class Rational implements Comparable<Rational> {
   /// Returns `this` to the power of [exponent].
   ///
   /// Returns [one] if the [exponent] equals `0`.
-  ///
-  /// The [exponent] must otherwise be positive.
   Rational pow(int exponent) => exponent >= 0
       ? Rational(
           numerator.pow(exponent),
