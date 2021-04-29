@@ -1,3 +1,7 @@
+# 1.1.0 (2021-04-29)
+
+- Allow negative value as exponent of `pow`.
+
 # 1.0.0 (2021-02-25)
 
 - Stable null safety release.

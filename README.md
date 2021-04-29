@@ -10,7 +10,7 @@ To use this library in your code :
 
 ```yaml
 dependencies:
-  rational: ^0.3.0
+  rational:
 ```
 
 ### Rational numbers
