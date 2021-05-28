@@ -1,3 +1,7 @@
+# 1.2.1 (2021-05-28)
+
+- Improve performance of several methods by working around the issue [BigInt.gcd() is really slow](https://github.com/dart-lang/sdk/issues/46180) with a custom `gcd` implementation based on [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
+
 # 1.2.0 (2021-05-28)
 
 - Improve parsing of number with big exponent part. However the exponent part
