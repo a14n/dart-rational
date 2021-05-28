@@ -28,6 +28,15 @@ final _i5 = BigInt.from(5);
 final _i10 = BigInt.from(10);
 final _i31 = BigInt.from(31);
 
+BigInt _gcd(BigInt a, BigInt b) {
+  while (b != _i0) {
+    final t = b;
+    b = a % b;
+    a = t;
+  }
+  return a;
+}
+
 class Rational implements Comparable<Rational> {
   factory Rational(BigInt numerator, [BigInt? denominator]) {
     denominator ??= _i1;
@@ -39,7 +48,9 @@ class Rational implements Comparable<Rational> {
     }
     final aNumerator = numerator.abs();
     final aDenominator = denominator.abs();
-    final gcd = aNumerator.gcd(aDenominator);
+    // TODO(a14n): switch back when https://github.com/dart-lang/sdk/issues/46180 is fixed
+    // final gcd = aNumerator.gcd(aDenominator);
+    final gcd = _gcd(aNumerator, aDenominator);
     return (gcd == _i1)
         ? Rational._normalized(numerator, denominator)
         : Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
