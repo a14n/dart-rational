@@ -356,18 +356,16 @@ class Rational implements Comparable<Rational> {
       return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
     }
 
-    var limit = _r1;
-    for (var i = 0; i < precision; i++) {
-      limit *= _r10;
-    }
+    final limit = _r10.pow(precision);
 
     var shift = _r1;
+    var absValue = abs();
     var pad = 0;
-    while (abs() * shift < limit) {
+    while (absValue * shift < limit) {
       pad++;
       shift *= _r10;
     }
-    while (abs() * shift >= limit) {
+    while (absValue * shift >= limit) {
       pad--;
       shift /= _r10;
     }
