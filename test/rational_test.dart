@@ -18,6 +18,7 @@ void main() {
     await expectThat(() => p('1.0e+5')).returnsNormally();
     await expectThat(() => p('1e+5')).returnsNormally();
     await expectThat(() => p('1.79769E+308')).returnsNormally();
+    await expectThat(() => p('6E739019')).returnsNormally();
     await expectThat(() => p('+')).throwsA<FormatException>();
   });
   test('parse scientific notation', () {
