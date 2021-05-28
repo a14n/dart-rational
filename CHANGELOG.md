@@ -1,3 +1,8 @@
+# 1.2.0 (2021-05-28)
+
+- Improve parsing of number with big exponent part. However the exponent part
+must now be parsable as an int.
+
 # 1.1.0+1 (2021-04-29)
 
 - Fix the doc of `pow`.
