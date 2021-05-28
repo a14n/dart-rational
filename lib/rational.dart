@@ -68,14 +68,12 @@ class Rational implements Comparable<Rational> {
       numerator = BigInt.parse(group1!);
     }
     if (group3 != null) {
-      var exponent = BigInt.parse(group3.substring(1));
-      while (exponent > _i0) {
-        numerator = numerator * _i10;
-        exponent -= _i1;
+      var exponent = int.parse(group3.substring(1));
+      if (exponent > 0) {
+        numerator *= _i10.pow(exponent);
       }
-      while (exponent < _i0) {
-        denominator = denominator * _i10;
-        exponent += _i1;
+      if (exponent < 0) {
+        denominator *= _i10.pow(exponent.abs());
       }
     }
     return Rational(numerator, denominator);
