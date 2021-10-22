@@ -9,3 +9,6 @@ publish_to: none
 dependencies:
   rational:
     path: ../
+
+dev_dependencies:
+  lints: ^1.0.1
