@@ -123,7 +123,7 @@ class Rational implements Comparable<Rational> {
   }
 
   String toDecimalString() {
-    if (isInteger) return toStringAsFixed(0);
+    if (isInteger) return '$numerator';
 
     final fractionDigits = hasFinitePrecision ? scale : 10;
     var asString = toStringAsFixed(fractionDigits);
