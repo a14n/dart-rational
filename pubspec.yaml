@@ -3,7 +3,7 @@ version: 1.2.1
 description: The rational package allows you to deal with rational numbers.
 homepage: https://github.com/a14n/dart-rational
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 dev_dependencies:
   expector: ^0.1.2
   lints: ^1.0.1

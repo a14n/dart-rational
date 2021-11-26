@@ -16,17 +16,13 @@ library rational;
 
 final _pattern = RegExp(r'^([+-]?\d*)(\.\d*)?([eE][+-]?\d+)?$');
 
-final _r0 = Rational.fromInt(0);
-final _r1 = Rational.fromInt(1);
+final _r0 = Rational.zero;
 final _r5 = Rational.fromInt(5);
 final _r10 = Rational.fromInt(10);
 
 final _i0 = BigInt.zero;
 final _i1 = BigInt.one;
-final _i2 = BigInt.two;
-final _i5 = BigInt.from(5);
 final _i10 = BigInt.from(10);
-final _i31 = BigInt.from(31);
 
 BigInt _gcd(BigInt a, BigInt b) {
   while (b != _i0) {
@@ -37,32 +33,60 @@ BigInt _gcd(BigInt a, BigInt b) {
   return a;
 }
 
+/// A number that can be expressed as a fraction of two integers, a [numerator]
+/// and a non-zero [denominator].
+///
+/// This fraction is stored in its canonical form. The canonical form is the
+/// rational number expressed in a unique way as an irreducible fraction a/b,
+/// where a and b are coprime integers and b > 0.
+///
+/// `Rational(2, 4)` corresponding to `2/4` will be created with its canonical
+/// form `1/2`. That means `Rational(2, 4).numerator` will be equal to `1` and
+/// `Rational(2, 4).denominator` equal to `2`.
 class Rational implements Comparable<Rational> {
+  /// Create a new rational number from its [numerator] and a non-zero
+  /// [denominator].
+  ///
+  /// If the [denominator] is omitted then its value will be `1`.
+  Rational._fromCanonicalForm(this.numerator, this.denominator)
+      : assert(denominator > _i0),
+        assert(numerator.abs().gcd(denominator) == _i1);
+
+  /// Create a new rational number from its [numerator] and a non-zero
+  /// [denominator].
+  ///
+  /// If the [denominator] is omitted then its value will be `1`.
   factory Rational(BigInt numerator, [BigInt? denominator]) {
     denominator ??= _i1;
-    if (denominator == _i0) throw ArgumentError();
-    if (numerator == _i0) return Rational._normalized(_i0, _i1);
+    if (numerator == _i0) return Rational._fromCanonicalForm(_i0, _i1);
     if (denominator < _i0) {
       numerator = -numerator;
       denominator = -denominator;
     }
-    final aNumerator = numerator.abs();
-    final aDenominator = denominator.abs();
     // TODO(a14n): switch back when https://github.com/dart-lang/sdk/issues/46180 is fixed
-    // final gcd = aNumerator.gcd(aDenominator);
-    final gcd = _gcd(aNumerator, aDenominator);
-    return (gcd == _i1)
-        ? Rational._normalized(numerator, denominator)
-        : Rational._normalized(numerator ~/ gcd, denominator ~/ gcd);
+    // final gcd = numerator.abs().gcd(denominator.abs());
+    final gcd = _gcd(numerator.abs(), denominator.abs());
+    return Rational._fromCanonicalForm(numerator ~/ gcd, denominator ~/ gcd);
   }
 
+  /// Create a new rational number from its [numerator] and a non-zero
+  /// [denominator].
+  ///
+  /// If the [denominator] is omitted then its value will be `1`.
   factory Rational.fromInt(int numerator, [int denominator = 1]) =>
       Rational(BigInt.from(numerator), BigInt.from(denominator));
 
-  factory Rational.parse(String decimalValue) {
-    final match = _pattern.firstMatch(decimalValue);
+  /// The numerator of this rational number.
+  final BigInt numerator;
+
+  /// The denominator of this rational number.
+  final BigInt denominator;
+
+  /// Parses [source] as a decimal literal and returns its value as [Rational].
+  static Rational parse(String source) {
+    final match = _pattern.firstMatch(source);
     if (match == null) {
-      throw FormatException('$decimalValue is not a valid format');
+      throw FormatException('$source is not a valid format');
     }
     final group1 = match.group(1);
     final group2 = match.group(2);
@@ -90,21 +114,20 @@ class Rational implements Comparable<Rational> {
     return Rational(numerator, denominator);
   }
 
-  Rational._normalized(this.numerator, this.denominator)
-      : assert(denominator > _i0),
-        assert(numerator.abs().gcd(denominator) == _i1);
-
-  final BigInt numerator, denominator;
-
+  /// The rational number corresponding to `0`.
   static final zero = Rational.fromInt(0);
+
+  /// The rational number corresponding to `1`.
   static final one = Rational.fromInt(1);
 
+  /// Returns `true` if `this` is an integer.
   bool get isInteger => denominator == _i1;
 
+  /// Returns the [Rational] [denominator]/[numerator].
   Rational get inverse => Rational(denominator, numerator);
 
   @override
-  int get hashCode => (numerator + _i31 * denominator).hashCode;
+  int get hashCode => Object.hash(numerator, denominator);
 
   @override
   bool operator ==(Object other) =>
@@ -122,76 +145,75 @@ class Rational implements Comparable<Rational> {
     }
   }
 
-  String toDecimalString() {
-    if (isInteger) return '$numerator';
-
-    final fractionDigits = hasFinitePrecision ? scale : 10;
-    var asString = toStringAsFixed(fractionDigits);
-    while (asString.contains('.') &&
-        (asString.endsWith('0') || asString.endsWith('.'))) {
-      asString = asString.substring(0, asString.length - 1);
-    }
-    return asString;
-  }
-  // implementation of Comparable
-
   @override
   int compareTo(Rational other) =>
       (numerator * other.denominator).compareTo(other.numerator * denominator);
 
-  // implementation of num
-
+  /// Addition operator.
   Rational operator +(Rational other) => Rational(
-      numerator * other.denominator + other.numerator * denominator,
-      denominator * other.denominator);
+        numerator * other.denominator + other.numerator * denominator,
+        denominator * other.denominator,
+      );
 
+  /// Subtraction operator.
   Rational operator -(Rational other) => Rational(
-      numerator * other.denominator - other.numerator * denominator,
-      denominator * other.denominator);
+        numerator * other.denominator - other.numerator * denominator,
+        denominator * other.denominator,
+      );
 
-  Rational operator *(Rational other) =>
-      Rational(numerator * other.numerator, denominator * other.denominator);
+  /// Multiplication operator.
+  Rational operator *(Rational other) => Rational(
+        numerator * other.numerator,
+        denominator * other.denominator,
+      );
 
+  /// Euclidean modulo operator.
+  ///
+  /// See [num.operator%].
   Rational operator %(Rational other) {
     final remainder = this.remainder(other);
     if (remainder == _r0) return _r0;
-    return remainder + (isNegative ? other.abs() : _r0);
+    return remainder + (_isNegative ? other.abs() : _r0);
   }
 
-  Rational operator /(Rational other) =>
-      Rational(numerator * other.denominator, denominator * other.numerator);
+  /// Division operator.
+  Rational operator /(Rational other) => Rational(
+        numerator * other.denominator,
+        denominator * other.numerator,
+      );
 
   /// Truncating division operator.
   ///
-  /// The result of the truncating division [:a ~/ b:] is equivalent to
-  /// [:(a / b).truncate():].
-  Rational operator ~/(Rational other) => (this / other).truncate();
+  /// See [num.operator~/].
+  BigInt operator ~/(Rational other) => (this / other).truncate();
 
-  Rational operator -() => Rational._normalized(-numerator, denominator);
+  /// Returns the negative value of this rational.
+  Rational operator -() => Rational(-numerator, denominator);
 
-  /// Return the remainder from dividing this [num] by [other].
-  Rational remainder(Rational other) => this - (this ~/ other) * other;
+  /// Returns the remainder from dividing this [Rational] by [other].
+  Rational remainder(Rational other) =>
+      this - (this ~/ other).toRational() * other;
 
+  /// Whether this number is numerically smaller than [other].
   bool operator <(Rational other) => compareTo(other) < 0;
 
+  /// Whether this number is numerically smaller than or equal to [other].
   bool operator <=(Rational other) => compareTo(other) <= 0;
 
+  /// Whether this number is numerically greater than [other].
   bool operator >(Rational other) => compareTo(other) > 0;
 
+  /// Whether this number is numerically greater than or equal to [other].
   bool operator >=(Rational other) => compareTo(other) >= 0;
 
-  bool get isNaN => false;
+  bool get _isNegative => numerator < _i0;
 
-  bool get isNegative => numerator < _i0;
+  /// Returns the absolute value of `this`.
+  Rational abs() => _isNegative ? (-this) : this;
 
-  bool get isInfinite => false;
-
-  /// Returns the absolute value of this [num].
-  Rational abs() => isNegative ? (-this) : this;
-
-  /// The signum function value of this [num].
+  /// The signum function value of `this`.
   ///
-  /// E.e. -1, 0 or 1 as the value of this [num] is negative, zero or positive.
+  /// E.e. -1, 0 or 1 as the value of this [Rational] is negative, zero or positive.
   int get signum {
     final v = compareTo(_r0);
     if (v < 0) return -1;
@@ -199,190 +221,53 @@ class Rational implements Comparable<Rational> {
     return 0;
   }
 
-  /// Returns the integer value closest to this [num].
+  /// Returns the [BigInt] value closest to this number.
   ///
   /// Rounds away from zero when there is no closest integer:
-  /// [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
-  Rational round() {
+  /// `(3.5).round() == 4` and `(-3.5).round() == -4`.
+  BigInt round() {
     final abs = this.abs();
     final absBy10 = abs * _r10;
     var r = abs.truncate();
-    if (absBy10 % _r10 >= _r5) r += _r1;
-    return isNegative ? -r : r;
+    if (absBy10 % _r10 >= _r5) r += _i1;
+    return _isNegative ? -r : r;
   }
 
-  /// Returns the greatest integer value no greater than this [num].
-  Rational floor() => isInteger
+  /// Returns the greatest [BigInt] value no greater than this [Rational].
+  BigInt floor() => isInteger
       ? truncate()
-      : isNegative
-          ? (truncate() - _r1)
+      : _isNegative
+          ? (truncate() - _i1)
           : truncate();
 
-  /// Returns the least integer value that is no smaller than this [num].
-  Rational ceil() => isInteger
+  /// Returns the least [BigInt] value that is no smaller than this [Rational].
+  BigInt ceil() => isInteger
       ? truncate()
-      : isNegative
+      : _isNegative
           ? truncate()
-          : (truncate() + _r1);
+          : (truncate() + _i1);
 
-  /// Returns the integer value obtained by discarding any fractional digits
-  /// from this [num].
-  Rational truncate() => Rational._normalized(numerator ~/ denominator, _i1);
+  /// The [BigInt] obtained by discarding any fractional digits from `this`.
+  BigInt truncate() => numerator ~/ denominator;
 
-  /// Returns the integer value closest to `this`.
-  ///
-  /// Rounds away from zero when there is no closest integer:
-  /// [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
-  ///
-  /// The result is a double.
-  double roundToDouble() => round().toDouble();
-
-  /// Returns the greatest integer value no greater than `this`.
-  ///
-  /// The result is a double.
-  double floorToDouble() => floor().toDouble();
-
-  /// Returns the least integer value no smaller than `this`.
-  ///
-  /// The result is a double.
-  double ceilToDouble() => ceil().toDouble();
-
-  /// Returns the integer obtained by discarding any fractional digits from
-  /// `this`.
-  ///
-  /// The result is a double.
-  double truncateToDouble() => truncate().toDouble();
-
-  /// Clamps the rational to be in the range [lowerLimit]-[upperLimit]. The
-  /// comparison is done using [compareTo] and therefore takes [:-0.0:] into
-  /// account.
+  /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Rational clamp(Rational lowerLimit, Rational upperLimit) => this < lowerLimit
       ? lowerLimit
       : this > upperLimit
           ? upperLimit
           : this;
 
-  /// Truncates this [num] to an integer and returns the result as an [int].
-  int toInt() => toBigInt().toInt();
-
-  /// Truncates this [num] to a big integer and returns the result as an
-  /// [BigInt].
+  /// The [BigInt] obtained by discarding any fractional digits from `this`.
+  ///
+  /// Equivalent to [truncate].
   BigInt toBigInt() => numerator ~/ denominator;
 
-  /// Return this [num] as a [double].
+  /// Returns `this` as a [double].
   ///
   /// If the number is not representable as a [double], an approximation is
   /// returned. For numerically large integers, the approximation may be
   /// infinite.
   double toDouble() => numerator / denominator;
-
-  /// Inspect if this [num] has a finite precision.
-  bool get hasFinitePrecision {
-    // the denominator should only be a product of powers of 2 and 5
-    var den = denominator;
-    while (den % _i5 == _i0) {
-      den = den ~/ _i5;
-    }
-    while (den % _i2 == _i0) {
-      den = den ~/ _i2;
-    }
-    return den == _i1;
-  }
-
-  /// The precision of this [num].
-  ///
-  /// The sum of the number of digits before and after the decimal point.
-  ///
-  /// **WARNING for dart2js** : It can give bad result for large number.
-  ///
-  /// Throws [StateError] if the precision is infinite, i.e. when
-  /// [hasFinitePrecision] is `false`.
-  int get precision {
-    if (!hasFinitePrecision) {
-      throw StateError('This number has an infinite precision: $this');
-    }
-    var x = numerator;
-    while (x % denominator != _i0) {
-      x *= _i10;
-    }
-    x = x ~/ denominator;
-    return x.abs().toString().length;
-  }
-
-  /// The scale of this [num].
-  ///
-  /// The number of digits after the decimal point.
-  ///
-  /// **WARNING for dart2js** : It can give bad result for large number.
-  ///
-  /// Throws [StateError] if the scale is infinite, i.e. when
-  /// [hasFinitePrecision] is `false`.
-  int get scale {
-    if (!hasFinitePrecision) {
-      throw StateError('This number has an infinite precision: $this');
-    }
-    var i = 0;
-    var x = numerator;
-    while (x % denominator != _i0) {
-      i++;
-      x *= _i10;
-    }
-    return i;
-  }
-
-  /// Converts a [num] to a string representation with [fractionDigits] digits
-  /// after the decimal point.
-  String toStringAsFixed(int fractionDigits) {
-    if (fractionDigits == 0) {
-      return round().toBigInt().toString();
-    } else {
-      var mul = _i1;
-      for (var i = 0; i < fractionDigits; i++) {
-        mul *= _i10;
-      }
-      final mulRat = Rational(mul);
-      final lessThanOne = abs() < _r1;
-      final tmp = (lessThanOne ? (abs() + _r1) : abs()) * mulRat;
-      final tmpRound = tmp.round();
-      final intPart =
-          (lessThanOne ? ((tmpRound ~/ mulRat) - _r1) : (tmpRound ~/ mulRat))
-              .toBigInt();
-      final decimalPart =
-          tmpRound.toBigInt().toString().substring(intPart.toString().length);
-      return '${isNegative ? '-' : ''}$intPart.$decimalPart';
-    }
-  }
-
-  /// Converts a [num] to a string in decimal exponential notation with
-  /// [fractionDigits] digits after the decimal point.
-  String toStringAsExponential([int? fractionDigits]) =>
-      toDouble().toStringAsExponential(fractionDigits);
-
-  /// Converts a [num] to a string representation with [precision] significant
-  /// digits.
-  String toStringAsPrecision(int precision) {
-    assert(precision > 0);
-
-    if (this == _r0) {
-      return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
-    }
-
-    final limit = _r10.pow(precision);
-
-    var shift = _r1;
-    var absValue = abs();
-    var pad = 0;
-    while (absValue * shift < limit) {
-      pad++;
-      shift *= _r10;
-    }
-    while (absValue * shift >= limit) {
-      pad--;
-      shift /= _r10;
-    }
-    final value = (this * shift).round() / shift;
-    return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
-  }
 
   /// Returns `this` to the power of [exponent].
   ///
@@ -393,4 +278,16 @@ class Rational implements Comparable<Rational> {
           numerator.pow(exponent),
           denominator.pow(exponent),
         );
+}
+
+/// Extensions on [BigInt].
+extension BigIntExt on BigInt {
+  /// This [BigInt] as a [Rational].
+  Rational toRational() => Rational(this);
+}
+
+/// Extensions on [int].
+extension IntExt on int {
+  /// This [int] as a [Rational].
+  Rational toRational() => Rational.fromInt(this);
 }
