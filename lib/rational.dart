@@ -260,7 +260,7 @@ class Rational implements Comparable<Rational> {
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
   ///
   /// Equivalent to [truncate].
-  BigInt toBigInt() => numerator ~/ denominator;
+  BigInt toBigInt() => truncate();
 
   /// Returns `this` as a [double].
   ///

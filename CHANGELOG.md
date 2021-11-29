@@ -1,3 +1,25 @@
+# 2.0.0 (2021-11-29)
+
+The goal of this version is to move several decimal methods back to the [decimal](https://pub.dev/packages/decimal) package and to have sharper types on the API.
+
+It introduces several breaking changes.
+
+- `~/`, `round()`, `floor()`, `ceil()`, `truncate()` now return a `BigInt`. If you need a `Rational` you can convert the `BigInt` to `Rational` with `bigint.toRational()`.
+- Removal of `toDecimalString()`. You can replace it with `rational.toDecimal(scaleOnInfinitePrecision: 10).toString()` using the [decimal](https://pub.dev/packages/decimal) package.
+- Removal of `isNaN` getter. It was always returning `false`.
+- Removal of `isInfinite` getter. It was always returning `false`.
+- Removal of `isNegative` getter. You can replace it with `rational < Rational.zero`.
+- Removal of `roundToDouble()`, `floorToDouble()`, `ceilToDouble()`, `truncateToDouble()`. You can replace them by `round().toDouble()`, `floor().toDouble()`, `ceil().toDouble()`, `truncate().toDouble()`.
+- Removal of `toInt()`. You can replace it with `rational.toBigInt().toInt()`.
+- Removal of `hasFinitePrecision` getter. This getter (provided as extension on `Rational`) is now part of the [decimal](https://pub.dev/packages/decimal) package.
+- Removal of `precision` and `scale` getters. They was only available on rational returning `true` on `hasFinitePrecision` (ie. decimal numbers). You can replace them with `rational.toDecimal().precision` and `rational.toDecimal().scale` using the [decimal](https://pub.dev/packages/decimal) package.
+- Removal of `toStringAsFixed`, `toStringAsExponential` and `toStringAsPrecision`. You can replace them with `rational.toDecimal(scaleOnInfinitePrecision: xxx).toStringAsFixed`,`rational.toDecimal(scaleOnInfinitePrecision: xxx).toStringAsExponential` and `rational.toDecimal(scaleOnInfinitePrecision: xxx).toStringAsPrecision` using the [decimal](https://pub.dev/packages/decimal) package.
+
+Other changes:
+
+- Add extension method `toRational()` on `int`.
+- Add extension method `toRational()` on `BigInt`.
+
 # 1.2.1 (2021-05-28)
 
 - Improve performance of several methods by working around the issue [BigInt.gcd() is really slow](https://github.com/dart-lang/sdk/issues/46180) with a custom `gcd` implementation based on [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
