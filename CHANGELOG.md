@@ -1,3 +1,7 @@
+# 2.1.0 (2022-01-27)
+
+- Add `Rational.tryParse`.
+
 # 2.0.0 (2021-11-29)
 
 The goal of this version is to move several decimal methods back to the [decimal](https://pub.dev/packages/decimal) package and to have sharper types on the API.
