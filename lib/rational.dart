@@ -114,6 +114,18 @@ class Rational implements Comparable<Rational> {
     return Rational(numerator, denominator);
   }
 
+  /// Parses [source] as a decimal literal and returns its value as [Rational].
+  ///
+  /// As [parse] except that this method returns `null` if the input is not
+  /// valid
+  static Rational? tryParse(String source) {
+    try {
+      return parse(source);
+    } on FormatException {
+      return null;
+    }
+  }
+
   /// The rational number corresponding to `0`.
   static final zero = Rational.fromInt(0);
 

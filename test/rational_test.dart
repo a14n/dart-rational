@@ -28,6 +28,15 @@ void main() {
     expectThat(p('345e-5')).equals(p('0.00345'));
     expectThat(p('.123')).equals(p('0.123'));
   });
+  test('tryParse returns correctly on valid value', () {
+    expectThat(Rational.tryParse('1')).equals(p('1'));
+    expectThat(Rational.tryParse('-1')).equals(p('-1'));
+    expectThat(Rational.tryParse('1.0e3')).equals(p('1000'));
+    expectThat(Rational.tryParse('1e+3')).equals(p('1000'));
+  });
+  test('tryParse returns null on invalid', () {
+    expectThat(Rational.tryParse('+')).isNull;
+  });
   test('get isInteger', () {
     expectThat(p('1').isInteger).isTrue;
     expectThat(p('0').isInteger).isTrue;
