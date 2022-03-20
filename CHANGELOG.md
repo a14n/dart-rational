@@ -1,3 +1,7 @@
+# 2.2.0 (2022-03-20)
+
+- Explicitly throw an `ArgumentError` when a Rational is created with a zero denominator.
+
 # 2.1.0 (2022-01-27)
 
 - Add `Rational.tryParse`.
