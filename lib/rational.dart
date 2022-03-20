@@ -58,6 +58,9 @@ class Rational implements Comparable<Rational> {
   /// If the [denominator] is omitted then its value will be `1`.
   factory Rational(BigInt numerator, [BigInt? denominator]) {
     denominator ??= _i1;
+    if (denominator == _i0) {
+      throw ArgumentError('zero can not be used as denominator');
+    }
     if (numerator == _i0) return Rational._fromCanonicalForm(_i0, _i1);
     if (denominator < _i0) {
       numerator = -numerator;

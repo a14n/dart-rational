@@ -7,6 +7,12 @@ import 'package:test/test.dart' show test;
 Rational p(String value) => Rational.parse(value);
 
 void main() {
+  test('Rational constructor', () async {
+    await expectThat(() => Rational(BigInt.one)).returnsNormally();
+    await expectThat(() => Rational(BigInt.one, BigInt.one)).returnsNormally();
+    await expectThat(() => Rational(BigInt.one, BigInt.zero))
+        .throwsA<ArgumentError>();
+  });
   test('string validation', () async {
     await expectThat(() => p('1')).returnsNormally();
     await expectThat(() => p('-1')).returnsNormally();
@@ -50,7 +56,7 @@ void main() {
   });
   test('get inverse', () async {
     expectThat(p('1').inverse).equals(p('1'));
-    await expectThat(() => p('0').inverse).throwsA<AssertionError>();
+    await expectThat(() => p('0').inverse).throwsA<ArgumentError>();
     expectThat(p('10').inverse).equals(p('0.1'));
     expectThat(p('200').inverse).equals(p('0.005'));
   });
@@ -106,7 +112,7 @@ void main() {
     expectThat(p('-8') % p('-4')).equals(p('0'));
   });
   test('operator /(Rational other)', () async {
-    await expectThat(() => p('1') / p('0')).throwsA<AssertionError>();
+    await expectThat(() => p('1') / p('0')).throwsA<ArgumentError>();
     expectThat(p('1') / p('1')).equals(p('1'));
     expectThat(p('1.1') / p('1')).equals(p('1.1'));
     expectThat(p('1.1') / p('0.1')).equals(p('11'));
@@ -116,7 +122,7 @@ void main() {
         .equals(p('3187801890382889927749202449137669070158402392688'));
   });
   test('operator ~/(Rational other)', () async {
-    await expectThat(() => p('1') ~/ p('0')).throwsA<AssertionError>();
+    await expectThat(() => p('1') ~/ p('0')).throwsA<ArgumentError>();
     expectThat((p('3') ~/ p('2')).toString()).equals('1');
     expectThat((p('1.1') ~/ p('1')).toString()).equals('1');
     expectThat((p('1.1') ~/ p('0.1')).toString()).equals('11');
