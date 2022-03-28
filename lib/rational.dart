@@ -218,7 +218,7 @@ class Rational implements Comparable<Rational> {
 
   /// Whether this number is numerically greater than or equal to [other].
   bool operator >=(Rational other) => compareTo(other) >= 0;
-  
+
   /// Whether this number is negative.
   bool get isNegative => numerator.isNegative;
 
