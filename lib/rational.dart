@@ -46,8 +46,6 @@ BigInt _gcd(BigInt a, BigInt b) {
 class Rational implements Comparable<Rational> {
   /// Create a new rational number from its [numerator] and a non-zero
   /// [denominator].
-  ///
-  /// If the [denominator] is omitted then its value will be `1`.
   Rational._fromCanonicalForm(this.numerator, this.denominator)
       : assert(denominator > _i0),
         assert(numerator.abs().gcd(denominator) == _i1);
@@ -188,7 +186,7 @@ class Rational implements Comparable<Rational> {
   Rational operator %(Rational other) {
     final remainder = this.remainder(other);
     if (remainder == _r0) return _r0;
-    return remainder + (_isNegative ? other.abs() : _r0);
+    return remainder + (isNegative ? other.abs() : _r0);
   }
 
   /// Division operator.
@@ -220,11 +218,12 @@ class Rational implements Comparable<Rational> {
 
   /// Whether this number is numerically greater than or equal to [other].
   bool operator >=(Rational other) => compareTo(other) >= 0;
-
-  bool get _isNegative => numerator < _i0;
+  
+  /// Whether this number is negative.
+  bool get isNegative => numerator.isNegative;
 
   /// Returns the absolute value of `this`.
-  Rational abs() => _isNegative ? (-this) : this;
+  Rational abs() => isNegative ? (-this) : this;
 
   /// The signum function value of `this`.
   ///
@@ -245,20 +244,20 @@ class Rational implements Comparable<Rational> {
     final absBy10 = abs * _r10;
     var r = abs.truncate();
     if (absBy10 % _r10 >= _r5) r += _i1;
-    return _isNegative ? -r : r;
+    return isNegative ? -r : r;
   }
 
   /// Returns the greatest [BigInt] value no greater than this [Rational].
   BigInt floor() => isInteger
       ? truncate()
-      : _isNegative
+      : isNegative
           ? (truncate() - _i1)
           : truncate();
 
   /// Returns the least [BigInt] value that is no smaller than this [Rational].
   BigInt ceil() => isInteger
       ? truncate()
-      : _isNegative
+      : isNegative
           ? truncate()
           : (truncate() + _i1);
 
