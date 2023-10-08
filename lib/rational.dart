@@ -77,6 +77,9 @@ class Rational implements Comparable<Rational> {
   factory Rational.fromInt(int numerator, [int denominator = 1]) =>
       Rational(BigInt.from(numerator), BigInt.from(denominator));
 
+  /// Create a new [Rational] number from [String] representation.
+  factory Rational.fromJson(String value) => Rational.parse(value);
+
   /// The numerator of this rational number.
   final BigInt numerator;
 
