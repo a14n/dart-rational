@@ -48,7 +48,9 @@ class Rational implements Comparable<Rational> {
   /// If the [denominator] is omitted then its value will be `1`.
   Rational._fromCanonicalForm(this.numerator, this.denominator)
       : assert(denominator > _i0),
-        assert(numerator.abs().gcd(denominator) == _i1);
+        // TODO(a14n): switch back when https://github.com/dart-lang/sdk/issues/46180 is fixed
+        // assert(numerator.abs().gcd(denominator) == _i1);
+        assert(_gcd(numerator.abs(), denominator) == _i1);
 
   /// Create a new rational number from its [numerator] and a non-zero
   /// [denominator].
