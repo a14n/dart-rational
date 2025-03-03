@@ -296,13 +296,13 @@ class Rational implements Comparable<Rational> {
 }
 
 /// Extensions on [BigInt].
-extension BigIntExt on BigInt {
+extension RationalBigIntExt on BigInt {
   /// This [BigInt] as a [Rational].
   Rational toRational() => Rational(this);
 }
 
 /// Extensions on [int].
-extension IntExt on int {
+extension RationalIntExt on int {
   /// This [int] as a [Rational].
   Rational toRational() => Rational.fromInt(this);
 }
